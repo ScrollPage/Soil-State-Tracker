@@ -1,3 +1,5 @@
+import Header from "@/components/Header";
+import PrivateLayout from "@/components/Layout/PrivateLayout";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -6,16 +8,16 @@ interface IHome {
   name: string;
 }
 
-export default function Home({ userId, name = "Vova" }: IHome) {
+export default function Home({ userId = 1, name = "Vova" }: IHome) {
   return (
-    <div>
+    <PrivateLayout>
       <Head>
         <title>Home</title>
       </Head>
       <h1>Hello {name}!</h1>
-      <Link href="/page">
-        <a>To_Page</a>
+      <Link href="/data">
+        <a>To_Data</a>
       </Link>
-    </div>
+    </PrivateLayout>
   );
 }

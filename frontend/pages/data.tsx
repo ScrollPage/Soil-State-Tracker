@@ -1,3 +1,4 @@
+import PrivateLayout from "@/components/Layout/PrivateLayout";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -8,7 +9,7 @@ interface IPage {
 
 export default function Page({ userId, name = "Misha" }: IPage) {
   return (
-    <div>
+    <PrivateLayout>
       <Head>
         <title>Page</title>
       </Head>
@@ -16,6 +17,6 @@ export default function Page({ userId, name = "Misha" }: IPage) {
       <Link href="/">
         <a>To_Home</a>
       </Link>
-    </div>
+    </PrivateLayout>
   );
 }

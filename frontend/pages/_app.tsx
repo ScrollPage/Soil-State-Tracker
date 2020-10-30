@@ -71,8 +71,8 @@ const GlobalStyle = createGlobalStyle`
   * {
     text-decoration: none;
   }
-  .__next {
-    height: 100%; 
+  #__next {
+    height: 100% !important; 
     width: 100%;
   }
   p {
@@ -84,14 +84,12 @@ const GlobalStyle = createGlobalStyle`
   body {
     overscroll-behavior: none;
     overflow-x: hidden;
-    margin-top: -20px;
     overflow-y: scroll;
     &.no-scroll {
       overflow-y: hidden;
     }
     &::-webkit-scrollbar {
         width: 5px;
-        border-radius: 50%;
         background-color: #f5f5f5;
         @media (max-width: 575.98px) {
             width: 0px;
@@ -101,7 +99,10 @@ const GlobalStyle = createGlobalStyle`
         height: 90%;
     }
     &::-webkit-scrollbar-thumb {
-        background-color: #1890ff;
+        background-color: #000;
     }
+  }
+  #nprogress .bar {
+    background: #000 !important;
   }
 `;
