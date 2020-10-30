@@ -4,14 +4,14 @@ import React, { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import Drower from "../Drower";
-import { SPrivateLayout, SMain, SBackDrop } from "./styles";
+import { SPrivateLayout, SMain } from "./styles";
 import gsap from "gsap";
 
 interface IPrivateLayout {
   children: React.ReactNode;
 }
 
-const PrivateLayout = ({ children }: IPrivateLayout) => {
+const PrivateLayout: React.FC<IPrivateLayout> = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   let layout = useRef<HTMLDivElement>(null);
@@ -36,7 +36,6 @@ const PrivateLayout = ({ children }: IPrivateLayout) => {
     <>
       <SPrivateLayout ref={layout}>
         <Header setMenuOpen={setMenuOpen} />
-        {/* {menuOpen && <SBackDrop onClick={() => setMenuOpen(false)} />} */}
         <SMain>
           <Container>{children}</Container>
         </SMain>

@@ -4,10 +4,10 @@ export const SLogo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 32px;
-  height: 32px;
-  background-color: #000;
+  width: 40px;
+  height: 40px;
+  /* background-color: #000; */
   color: #fff;
   font-size: 20px;
-  border-radius: 50%;
+  /* border-radius: 50%; */
 `;

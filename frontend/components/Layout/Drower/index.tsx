@@ -12,7 +12,7 @@ interface IDrower {
   menuOpen: boolean;
 }
 
-const Drower = ({ setMenuOpen, menuOpen }: IDrower) => {
+const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen }) => {
   let drower = useRef(null);
 
   useEffect(() => {
