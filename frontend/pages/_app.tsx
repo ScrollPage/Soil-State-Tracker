@@ -1,3 +1,4 @@
+import PrivateLayout from "@/components/Layout/PrivateLayout";
 import Head from "next/head";
 import stylesheet from "antd/dist/antd.min.css";
 import nprogress from "nprogress/nprogress.css";
@@ -11,7 +12,7 @@ import { Provider } from "react-redux";
 import Cookie from "js-cookie";
 import store from "@/store/store";
 import axios from "axios";
-// import Alert from '@/components/UI/Alert';
+import Alert from "@/components/UI/Alert";
 import { AppProps } from "next/app";
 
 NProgress.configure({
@@ -52,8 +53,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           }}
         >
           <Provider store={store}>
-            {/* <Alert /> */}
-            <Component {...pageProps} />
+            <Alert />
+            <PrivateLayout>
+              <Component {...pageProps} />
+            </PrivateLayout>
           </Provider>
         </SWRConfig>
       </>

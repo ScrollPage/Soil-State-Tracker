@@ -5,12 +5,21 @@ import HeaderMenu from "./HeaderMenu";
 import { SHeader, SInner, SItem, SItemLink, SItemBtn } from "./styles";
 import { MenuOutlined } from "@ant-design/icons";
 import Logo from "../UI/Logo";
+import { useRouter } from "next/router";
 
 interface IHeader {
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const Header = ({ setMenuOpen }: IHeader) => {
+  const { push } = useRouter();
+
+  const goToRegisterHandler = () => {
+    push({ pathname: "/register" }, undefined, {
+      shallow: true,
+    });
+  };
+
   return (
     <SHeader>
       <Container fluid>
@@ -23,10 +32,14 @@ const Header = ({ setMenuOpen }: IHeader) => {
           </SItem>
           <SItem>
             <SItemBtn>
-              <SItemLink>Вход</SItemLink>
+              <SItemLink href={"/login"}>
+                <a>Вход</a>
+              </SItemLink>
             </SItemBtn>
             <SItemBtn>
-              <SButton shape="round">Регистрация</SButton>
+              <SButton shape="round" onClick={goToRegisterHandler}>
+                Регистрация
+              </SButton>
             </SItemBtn>
           </SItem>
           <SItem>

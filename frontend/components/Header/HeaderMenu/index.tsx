@@ -8,10 +8,15 @@ interface INavitem {
   name: string;
 }
 
-const navItems: INavitem[] = [
+const publicNavItems: INavitem[] = [
   { path: "/", name: "Главная" },
-  { path: "/data", name: "Данные" },
+  { path: "/about", name: "О продукте" },
+  { path: "/about", name: "Купить" },
 ];
+
+const privateNavItems: INavitem[] = [{ path: "/data", name: "Данные" }];
+
+const navItems: INavitem[] = [...publicNavItems, ...privateNavItems];
 
 export const renderLinks = (isDrower?: boolean) => {
   const router = useRouter();

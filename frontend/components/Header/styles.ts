@@ -1,5 +1,6 @@
 import { UserSelectNone } from './../UI/UserSelectNone/index';
 import styled from 'styled-components';
+import Link from 'next/link';
 
 export const SInner = styled.div`
   height: 100%;
@@ -10,7 +11,11 @@ export const SInner = styled.div`
   align-items: center;
 `;
 
-export const SItemBtn = styled.div``;
+export const SItemBtn = styled.div`
+  a {
+    color: #000 !important;
+  }
+`;
 
 export const SItem = styled.div`
   display: flex;
@@ -62,8 +67,8 @@ export const SLogo = styled.div`
   }
 `;
 
-export const SItemLink = styled.p`
+export const SItemLink = styled(Link)`
   margin: 0;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 400;  
 `;

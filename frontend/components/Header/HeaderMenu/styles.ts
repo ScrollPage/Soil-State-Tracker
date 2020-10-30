@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 export const SHeaderMenu = styled.div``;
 
 export const SNavLink = styled.a<{ active?: boolean, isDrower?: boolean }>`
-  margin-right: 10px;
+  margin-right: 15px;
   color: #000;
   opacity: 0.5;
   font-weight: 600;

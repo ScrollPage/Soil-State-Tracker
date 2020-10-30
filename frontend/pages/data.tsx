@@ -1,22 +1,20 @@
-import PrivateLayout from "@/components/Layout/PrivateLayout";
+import { show } from "@/store/actions/alert";
 import Head from "next/head";
-import Link from "next/link";
+import { useDispatch } from "react-redux";
 
-interface IPage {
-  userId: number;
-  name: string;
-}
+interface IData {}
 
-export default function Page({ userId, name = "Misha" }: IPage) {
+export default function Data({}: IData) {
+  const dispatch = useDispatch();
+
   return (
-    <PrivateLayout>
+    <>
       <Head>
-        <title>Page</title>
+        <title>Data</title>
       </Head>
-      <h1>Hello {name}!</h1>
-      <Link href="/">
-        <a>To_Home</a>
-      </Link>
-    </PrivateLayout>
+      <h1 onClick={() => dispatch(show("Тестовый алерт", "error", true))}>
+        Data
+      </h1>
+    </>
   );
 }
