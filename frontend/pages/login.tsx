@@ -51,11 +51,15 @@ const SLoginInner = styled.div`
 const SLoginTitle = styled.h1`
   font-weight: 800;
   font-size: 36px;
+  @media (max-width: 767.98px) {
+    font-size: 26px;
+  }
 `;
 const SLoginSubTitle = styled.span`
   display: flex;
   @media (max-width: 767.98px) {
     margin-bottom: 30px;
+    font-size: 15px;
   }
 `;
 const SLoginMain = styled.span``;
