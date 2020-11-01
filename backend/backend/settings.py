@@ -142,6 +142,15 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000',
 )
 
+# smtp
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'reqww00@gmail.com'
+EMAIL_HOST_PASSWORD = 'CFHFYXF228hec$'
+EMAIL_PORT = 587
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 # User model
 AUTH_USER_MODEL = 'client.Client'
 
@@ -192,15 +201,15 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-#Domens
-DJANGO_DOMEN = 'http://127.0.0.1:8000'
-REACT_DOMEN = 'http://127.0.0.1:3000'
+#Domains
+DJANGO_DOMAIN = 'http://127.0.0.1:8000'
+REACT_DOMAIN = 'http://127.0.0.1:3000'
 
 #Djoser
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
+    'ACTIVATION_URL': '#',
+    'SEND_ACTIVATION_EMAIL': False,
     'SERIALIZERS': {},
 }

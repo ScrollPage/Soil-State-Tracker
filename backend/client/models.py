@@ -1,9 +1,15 @@
+from rest_framework.authtoken.models import Token
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.core.mail import send_mail
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser, 
     BaseUserManager, 
     PermissionsMixin
 )
+from django.conf import settings
+
 from random import randint
 
 class ClientManager(BaseUserManager):
@@ -33,6 +39,7 @@ class ClientManager(BaseUserManager):
         user.is_manager = True
         user.is_superuser = True
         user.is_active = True
+        user.is_staff = True
 
         user.save(using = self._db)
         return user
@@ -60,3 +67,17 @@ class Client(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
+
+@receiver(post_save, sender=Client)
+def send_conf_mail(sender, instance=None, created=False, **kwargs):
+    '''Отправляет письмо с подтверждением'''
+    if created:
+        if not instance.is_superuser:
+            m = Token.objects.create(user=instance)
+            send_mail(
+                'Подтверждение регистрации',
+                f'Перейдите по ссылке, чтобы завершить регистрацию: {settings.REACT_DOMAIN}/account-activation?token={m.key}',
+                settings.EMAIL_HOST_USER, 
+                [instance.email],
+                fail_silently=False
+            )
