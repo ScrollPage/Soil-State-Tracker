@@ -22,8 +22,8 @@ export const SItem = styled.div`
   justify-content: center;
   align-items: center;
   ${SItemBtn} {
-    &:first-of-type {
-      margin-right: 20px;
+    &:last-of-type {
+      margin-left: 20px;
     }
   }
 `;

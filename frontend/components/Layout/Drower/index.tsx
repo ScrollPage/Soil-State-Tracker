@@ -39,10 +39,7 @@ const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen }) => {
     <SDrower ref={drower}>
       <SDrowerInner>
         <SDrowerClose>
-          <SButton
-            shape="circle"
-            onClick={() => setMenuOpen((state) => !state)}
-          >
+          <SButton shape="circle" onClick={() => setMenuOpen(false)}>
             <CloseOutlined />
           </SButton>
         </SDrowerClose>

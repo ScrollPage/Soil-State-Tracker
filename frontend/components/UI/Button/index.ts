@@ -1,16 +1,27 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Button } from 'antd';
 
-export const SButton = styled(Button) <{ width?: string }>`
+export const SButton = styled(Button) <{ width?: string, iswhite?: string }>`
   width: ${({ width }) => width || '100%'};
-  background-color: #000;
-  color: #fff;
-  transition: all 0.3s ease -in -out;
-    &:hover, :focus {
+  ${({ iswhite }) => iswhite === 'true' ? css`
     background-color: #fff;
     color: #000;
-    border: 1px solid #d9d9d9;
+    &:hover, :focus {
+      background-color: #000;
+      color: #fff;
+      border: 1px solid #d9d9d9;
   }
+  ` :
+    css`
+    background-color: #000;
+    color: #fff;
+    &:hover, :focus {
+      background-color: #fff;
+      color: #000;
+      border: 1px solid #d9d9d9;
+    }
+  `};
+  transition: all 0.3s ease -in -out;
 `;
 
 
