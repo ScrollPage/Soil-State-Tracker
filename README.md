@@ -20,9 +20,10 @@ yarn dev
 2) Run the BACKEND server (cd backend): 
 
 ```bash
-pip install -r req.txt
-cmd
+python -m venv env
 env\Scripts\activate.bat
+pip install -r req.txt
+
 python manage.py runserver
 ```
 

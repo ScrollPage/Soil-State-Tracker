@@ -4,7 +4,7 @@ from client.models import Client
 
 class Company(models.Model):
     '''Компания'''
-    name = models.CharField('Название', max_length=50)
+    name = models.CharField('Название', max_length=50, unique=True)
     url = models.URLField('Ссылка', max_length=100)
     admin = models.ForeignKey(Client, verbose_name='Администратор', on_delete=models.CASCADE)
     workers = models.ManyToManyField(Client, verbose_name='Работники', related_name='work')
