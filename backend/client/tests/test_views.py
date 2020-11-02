@@ -25,3 +25,15 @@ class TestViews(APITestCase):
         key = Token.objects.get(user=self.user1)
         response = get_response('activate', 'post', data={'token': 1})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_activity_active(self):
+        response = get_response('check-activity', 'get', kwargs={'email': 'test@case1.test'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['is_active'], False)
+
+    def test_activity_not_active(self):
+        self.user1.is_active = True
+        self.user1.save()
+        response = get_response('check-activity', 'get', kwargs={'email': 'test@case1.test'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['is_active'], True)

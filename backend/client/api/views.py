@@ -1,18 +1,27 @@
-from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 from rest_framework import permissions, status
 from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
-from.serializers import TokenSerialzizer
+from .serializers import TokenSerialzizer, ClientActivitySerializer
+from .service import SerializerRetrieveViewSet
+from client.models import Client
 
-class ClientActivation(APIView):
+class ClientActivity(SerializerRetrieveViewSet):
     '''Активация аккаунта'''
 
+    queryset = Client.objects.all()
     serializer_class = TokenSerialzizer
+    serializer_class_by_action = {
+        'retrieve': ClientActivitySerializer
+    }
     permission_classes = [permissions.AllowAny]
+    lookup_field = 'email'
 
-    def post(self, request, *args, **kwargs):
+    @action(detail=False, methods=['post'])
+    def activate(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         key = serializer.data.get('token')

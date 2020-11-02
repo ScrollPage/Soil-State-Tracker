@@ -1,5 +1,15 @@
 from rest_framework.test import APIClient
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.views import exception_handler as drf_exception_handler
 from django.urls import reverse
+from django.views.generic import View
+
+import traceback
+import json
+
+from .bot import bot
+from . import local
 
 def get_response(url, method, user=None, data=None, kwargs=None, is_url=False, format=None):
     client = APIClient()
@@ -38,3 +48,17 @@ class SerializerMixin:
 class PermissionSerializerMixin(PermissionMixin, SerializerMixin):
     '''Доп классы'''
     pass
+
+def exception_handler(exc, context):
+    # msg = f'An exception occured: {str(exc)}\n'
+    # msg += traceback.format_exc() + '\n'
+    # request = context['request']
+    # if request.user:
+    #     msg += f"User's email: {request.user.email}\n User's full name: {request.user.get_full_name()}\n"
+    # else:
+    #     msg += f'User is none\n'
+    # d = {key: value for key, value in request.data.items()}
+    # msg += f"Request's data: {d}\n"
+    # bot.send_message(text=msg, chat_id=local.BOT_CHAT_ID)
+    return drf_exception_handler(exc, context)
+    

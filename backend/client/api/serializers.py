@@ -14,3 +14,10 @@ class ClientDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = ['email', 'first_name', 'last_name', 'is_superuser']
+
+class ClientActivitySerializer(serializers.ModelSerializer):
+    '''Сериализация активности контакта'''
+
+    class Meta:
+        model = Client
+        fields = ['is_active']
