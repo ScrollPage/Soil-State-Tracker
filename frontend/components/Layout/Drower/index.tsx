@@ -72,7 +72,7 @@ const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen, isAuth }) => {
           <Logo />
         </SDrowerItem>
         <SDrowerItem>
-          <SDrowerPages>{renderLinks(isAuth, true)}</SDrowerPages>
+          <SDrowerPages>{renderLinks(isAuth, true, setMenuOpen)}</SDrowerPages>
           <SDrowerAuth>
             {!isAuth ? (
               <>

@@ -147,20 +147,5 @@ export const setAuthActivate = (isActivate: boolean) => ({
   type: 'SET_AUTH_ACTIVATE', isActivate
 } as const)
 
-export const authSetCompany = (name: string, info: string): ThunkType => async dispatch => {
-  const token = Cookie.get('token');
-  await instance(token)
-    .post('/api/company/', {
-      name,
-      info,
-    })
-    .then(res => {
-      Router.push({ pathname: '/data' }, undefined, { shallow: true });
-      dispatch(show('Вы успешно создали компанию!', 'warning'));
-    })
-    .catch(err => {
-      dispatch(show('Ошибка в создании компании!', 'warning'));
-    });
-};
 
 

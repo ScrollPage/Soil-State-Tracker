@@ -36,7 +36,7 @@ const Header = ({ setMenuOpen, isAuth }: IHeader) => {
             <Logo />
           </SItem>
           <SItem>
-            <HeaderMenu isAuth={isAuth} setMenuOpen={setMenuOpen} />
+            <HeaderMenu isAuth={isAuth} />
           </SItem>
           <SItem>
             {!isAuth ? (

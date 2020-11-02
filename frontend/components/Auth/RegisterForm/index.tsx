@@ -11,12 +11,10 @@ import { SButton } from "@/components/UI/Button";
 import Input from "@/components/UI/Input";
 import TextArea from "@/components/UI/TextArea";
 import { object, string, ref } from "yup";
-import {
-  authCheckActivate,
-  authSetCompany,
-  authSignup,
-} from "@/store/actions/auth";
+import { authCheckActivate, authSignup } from "@/store/actions/auth";
 import { useDispatch } from "react-redux";
+import { addCompany } from "@/store/actions/company";
+import { useRouter } from "next/router";
 
 const validationLogin = object().shape({
   email: string().email("Некорректный E-mail").required("Введите E-mail"),
@@ -40,7 +38,7 @@ const validationLogin = object().shape({
     .oneOf([ref("password"), ""], "Пароли должны совпадать"),
 });
 
-const validationCompany = object().shape({
+export const validationCompany = object().shape({
   companyName: string()
     .min(3, "Слишком короткое название компании")
     .max(15, "Слишком длинное название компании")
@@ -59,6 +57,8 @@ interface IRegisterForm {
 const RegisterForm: React.FC<IRegisterForm> = ({ step, setStep }) => {
   const dispatch = useDispatch();
 
+  const { push } = useRouter();
+
   return (
     <SRegisterForm>
       <FormikStepper
@@ -76,7 +76,17 @@ const RegisterForm: React.FC<IRegisterForm> = ({ step, setStep }) => {
         enableReinitialize={true}
         onSubmit={(values, helpers) => {
           helpers.setSubmitting(true);
-          dispatch(authSetCompany(values.companyName, values.companyInfo));
+          try {
+            dispatch(
+              addCompany(
+                "/api/company/",
+                values.companyName,
+                values.companyInfo
+              )
+            );
+            push({ pathname: "/data" }, undefined, { shallow: true });
+          } catch {}
+
           setTimeout(() => {
             // alert(JSON.stringify(values, null, 2));
             helpers.setSubmitting(false);
