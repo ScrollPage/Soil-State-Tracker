@@ -69,11 +69,13 @@ const MyApp = ({ Component, pageProps, isAuth }: IMyApp) => {
   );
 };
 
-MyApp.getInitialProps = async (appContext: AppContext) => {
-  const appProps = await App.getInitialProps(appContext);
-  const token = cookies(appContext.ctx)?.token;
+MyApp.getInitialProps = async (AppContext: AppContext) => {
+  const { Component, ctx } = AppContext;
+  const appProps = Component.getInitialProps
+    ? await App.getInitialProps(AppContext)
+    : {};
+  const token = cookies(ctx)?.token;
   const isAuth = token ? true : false;
-
   return { ...appProps, isAuth };
 };
 

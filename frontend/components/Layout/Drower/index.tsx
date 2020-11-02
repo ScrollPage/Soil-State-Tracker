@@ -4,16 +4,31 @@ import Logo from "@/components/UI/Logo";
 import { CloseOutlined } from "@ant-design/icons";
 import React, { SetStateAction, useEffect, useRef } from "react";
 import { Dispatch } from "react";
-import { SDrower, SDrowerInner, SDrowerItem, SDrowerClose } from "./styles";
+import {
+  SDrower,
+  SDrowerInner,
+  SDrowerItem,
+  SDrowerClose,
+  SDrowerPages,
+  SDrowerAuth,
+} from "./styles";
 import gsap from "gsap";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
+import { logout } from "@/store/actions/auth";
+import { SItemBtn, SItemLink } from "@/components/Header/styles";
 
 interface IDrower {
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
   menuOpen: boolean;
+  isAuth: boolean;
 }
 
-const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen }) => {
+const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen, isAuth }) => {
   let drower = useRef(null);
+
+  const { push } = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (menuOpen) {
@@ -35,6 +50,16 @@ const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen }) => {
     }
   }, [menuOpen]);
 
+  const goToRegisterHandler = () => {
+    push({ pathname: "/register" }, undefined, {
+      shallow: true,
+    });
+  };
+
+  const logoutHandler = () => {
+    dispatch(logout());
+  };
+
   return (
     <SDrower ref={drower}>
       <SDrowerInner>
@@ -46,7 +71,31 @@ const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen }) => {
         <SDrowerItem>
           <Logo />
         </SDrowerItem>
-        <SDrowerItem>{renderLinks(true)}</SDrowerItem>
+        <SDrowerItem>
+          <SDrowerPages>{renderLinks(isAuth, true)}</SDrowerPages>
+          <SDrowerAuth>
+            {!isAuth ? (
+              <>
+                <SItemBtn>
+                  <SItemLink href={"/login"}>
+                    <a>Вход</a>
+                  </SItemLink>
+                </SItemBtn>
+                <SItemBtn>
+                  <SButton shape="round" onClick={goToRegisterHandler}>
+                    Регистрация
+                  </SButton>
+                </SItemBtn>
+              </>
+            ) : (
+              <SItemBtn>
+                <SButton shape="round" onClick={logoutHandler}>
+                  Выйти
+                </SButton>
+              </SItemBtn>
+            )}
+          </SDrowerAuth>
+        </SDrowerItem>
       </SDrowerInner>
     </SDrower>
   );

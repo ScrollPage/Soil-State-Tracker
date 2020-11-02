@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { SetStateAction } from "react";
+import { Dispatch } from "react";
 import { SHeaderMenu, SNavLink } from "./styles";
 
 interface INavitem {
@@ -35,9 +36,10 @@ export const renderLinks = (isAuth: boolean, isDrower?: boolean) => {
 
 interface IHeaderMenu {
   isAuth: boolean;
+  setMenuOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const HeaderMenu = ({ isAuth }: IHeaderMenu) => {
+const HeaderMenu = ({ isAuth, setMenuOpen }: IHeaderMenu) => {
   return <SHeaderMenu>{renderLinks(isAuth, false)}</SHeaderMenu>;
 };
 
