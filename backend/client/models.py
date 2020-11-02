@@ -76,7 +76,7 @@ def send_conf_mail(sender, instance=None, created=False, **kwargs):
             token = Token.objects.create(user=instance)
             send_mail(
                 'Подтверждение регистрации',
-                f'Перейдите по ссылке, чтобы завершить регистрацию: {settings.REACT_DOMAIN}/account-activation?token={token.key}',
+                f'Перейдите по ссылке, чтобы завершить регистрацию: {settings.REACT_DOMAIN}/register?token={token.key}',
                 settings.EMAIL_HOST_USER, 
                 [instance.email],
                 fail_silently=False
