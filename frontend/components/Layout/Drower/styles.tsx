@@ -26,6 +26,6 @@ export const SDrowerItem = styled.div`
 
 export const SDrowerClose = styled.div`
   position: absolute;
-  right: 0;
+  right: -20px;
   top: -25px;
 `;

@@ -4,6 +4,8 @@ import { Formik, Form, FormikProps, Field } from "formik";
 import { SButton } from "@/components/UI/Button";
 import Input from "@/components/UI/Input";
 import { object, string } from "yup";
+import { useDispatch } from "react-redux";
+import { authLogin } from "@/store/actions/auth";
 
 const validationSchema = object().shape({
   email: string().email("Некорректный E-mail").required("Введите E-mail"),
@@ -11,6 +13,8 @@ const validationSchema = object().shape({
 });
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
+
   return (
     <SLoginForm>
       <Formik
@@ -19,9 +23,9 @@ const LoginForm = () => {
           password: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, actions) => {
+        onSubmit={async (values, actions) => {
+          await dispatch(authLogin(values.email, values.password, true));
           setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
             actions.setSubmitting(false);
           }, 1000);
         }}

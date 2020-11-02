@@ -1,24 +1,27 @@
-import { show } from "@/store/actions/alert";
+import { ensureAuth } from "@/utils.ts/ensure";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 interface IData {}
 
 export default function Data({}: IData) {
-  const dispatch = useDispatch();
-
   return (
     <SData>
       <Head>
         <title>Данные</title>
       </Head>
-      <h1 onClick={() => dispatch(show("Тестовый алерт", "error", true))}>
-        Данные
-      </h1>
+      <h1>Данные</h1>
     </SData>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<IData> = async (ctx) => {
+  ensureAuth(ctx);
+  return {
+    props: {},
+  };
+};
 
 const SData = styled.div`
   display: flex;

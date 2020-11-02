@@ -1,3 +1,5 @@
+import { ensureAuth } from "@/utils.ts/ensure";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 import styled from "styled-components";
 
@@ -13,6 +15,13 @@ export default function Home({}: IHome) {
     </SHome>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<IHome> = async (ctx) => {
+  // ensureAuth(ctx);
+  return {
+    props: {},
+  };
+};
 
 const SHome = styled.div`
   display: flex;
