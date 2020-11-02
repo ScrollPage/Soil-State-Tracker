@@ -4,12 +4,19 @@ import {
   SFormikStepper,
   SFormikStepperMain,
   SFormikStepperBtn,
+  SFormikStepHeader,
 } from "./styles";
 import { Formik, Form, Field, FormikValues, FormikConfig } from "formik";
 import { SButton } from "@/components/UI/Button";
 import Input from "@/components/UI/Input";
 import TextArea from "@/components/UI/TextArea";
 import { object, string, ref } from "yup";
+import {
+  authCheckActivate,
+  authSetCompany,
+  authSignup,
+} from "@/store/actions/auth";
+import { useDispatch } from "react-redux";
 
 const validationLogin = object().shape({
   email: string().email("Некорректный E-mail").required("Введите E-mail"),
@@ -50,6 +57,8 @@ interface IRegisterForm {
 }
 
 const RegisterForm: React.FC<IRegisterForm> = ({ step, setStep }) => {
+  const dispatch = useDispatch();
+
   return (
     <SRegisterForm>
       <FormikStepper
@@ -65,9 +74,11 @@ const RegisterForm: React.FC<IRegisterForm> = ({ step, setStep }) => {
         step={step}
         setStep={setStep}
         enableReinitialize={true}
-        onSubmit={async (values, helpers) => {
+        onSubmit={(values, helpers) => {
+          helpers.setSubmitting(true);
+          dispatch(authSetCompany(values.companyName, values.companyInfo));
           setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
+            // alert(JSON.stringify(values, null, 2));
             helpers.setSubmitting(false);
           }, 1000);
         }}
@@ -104,6 +115,11 @@ const RegisterForm: React.FC<IRegisterForm> = ({ step, setStep }) => {
             component={Input}
           />
         </FormikStep>
+        <FormikStep>
+          <SFormikStepHeader>
+            К вам на почту пришло подтверждение
+          </SFormikStepHeader>
+        </FormikStep>
         <FormikStep validationSchema={validationCompany}>
           <Field
             type="text"
@@ -127,7 +143,7 @@ export default RegisterForm;
 
 interface IFormikStep {
   children: React.ReactNode;
-  validationSchema: any | (() => any);
+  validationSchema?: any | (() => any);
 }
 
 const FormikStep: React.FC<IFormikStep> = ({ children, validationSchema }) => {
@@ -146,7 +162,7 @@ const FormikStepper: React.FC<FormikStepperProps> = ({
   setStep,
   ...stepperProps
 }) => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const childrenArray = React.Children.toArray(children) as React.ReactElement<
     IFormikStep
@@ -162,15 +178,29 @@ const FormikStepper: React.FC<FormikStepperProps> = ({
     <Formik
       {...stepperProps}
       validationSchema={currentChild.props.validationSchema}
-      onSubmit={async (values, helpers) => {
+      onSubmit={(values, helpers) => {
         if (isLastElement()) {
-          await stepperProps.onSubmit(values, helpers);
+          stepperProps.onSubmit(values, helpers);
         } else {
           helpers.setTouched({
             company: false,
             companyInfo: false,
           });
-          setStep((e) => e + 1);
+          helpers.setSubmitting(false);
+          if (step === 0) {
+            dispatch(
+              authSignup(
+                values.email,
+                values.firstName,
+                values.lastName,
+                values.password,
+                setStep
+              )
+            );
+          }
+          if (step === 1) {
+            dispatch(authCheckActivate(setStep));
+          }
         }
       }}
     >
@@ -180,7 +210,7 @@ const FormikStepper: React.FC<FormikStepperProps> = ({
             <SFormikStepper>
               <SFormikStepperMain>{currentChild}</SFormikStepperMain>
               <SFormikStepperBtn>
-                {step > 0 ? (
+                {/* {step > 0 ? (
                   <SButton
                     onClick={() => setStep((e) => e - 1)}
                     width={"300px"}
@@ -189,13 +219,17 @@ const FormikStepper: React.FC<FormikStepperProps> = ({
                   >
                     Назад
                   </SButton>
-                ) : null}
+                ) : null} */}
                 <SButton
                   width={"300px"}
                   htmlType="submit"
                   disabled={isSubmitting}
                 >
-                  {isLastElement() ? "Зарегистрироваться" : "Дальше"}
+                  {isLastElement()
+                    ? "Зарегистрироваться"
+                    : step === 0
+                    ? "Далее"
+                    : "Получил"}
                 </SButton>
               </SFormikStepperBtn>
             </SFormikStepper>

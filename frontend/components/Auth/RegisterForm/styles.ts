@@ -14,7 +14,13 @@ export const SFormikStepper = styled.div`
   flex-direction: column;
 `;
 export const SFormikStepperMain = styled.div`
+  display: flex;
+  flex-direction: column;
   flex: 1;
+  ${SButton} {
+    flex: 0;
+    margin-bottom: 10px;
+  }
 `;
 export const SFormikStepperBtn = styled.div`
   flex: 0;
@@ -22,3 +28,10 @@ export const SFormikStepperBtn = styled.div`
     margin-bottom: 10px;
   }
 `;
+
+export const SFormikStepHeader = styled.h3`
+  flex: 1;
+  text-align: center;
+  margin-top: 40px;
+`;
+

@@ -9,9 +9,10 @@ import gsap from "gsap";
 
 interface IPrivateLayout {
   children: React.ReactNode;
+  isAuth: boolean;
 }
 
-const PrivateLayout: React.FC<IPrivateLayout> = ({ children }) => {
+const PrivateLayout: React.FC<IPrivateLayout> = ({ children, isAuth }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   let layout = useRef<HTMLDivElement>(null);
@@ -35,7 +36,7 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children }) => {
   return (
     <>
       <SPrivateLayout ref={layout}>
-        <Header setMenuOpen={setMenuOpen} />
+        <Header setMenuOpen={setMenuOpen} isAuth={isAuth} />
         <SMain>
           <Container>{children}</Container>
         </SMain>

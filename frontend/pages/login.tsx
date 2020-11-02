@@ -3,8 +3,12 @@ import LoginForm from "@/components/Auth/LoginForm";
 import Link from "next/link";
 import React from "react";
 import styled from "styled-components";
+import { GetServerSideProps } from "next";
+import { ensureRedirectToData } from "@/utils.ts/ensure";
 
-const Login = () => {
+interface ILogin {}
+
+const Login = ({}: ILogin) => {
   return (
     <SLogin>
       <Head>
@@ -29,6 +33,13 @@ const Login = () => {
 };
 
 export default Login;
+
+export const getServerSideProps: GetServerSideProps<ILogin> = async (ctx) => {
+  ensureRedirectToData(ctx);
+  return {
+    props: {},
+  };
+};
 
 const SLogin = styled.div`
   display: flex;

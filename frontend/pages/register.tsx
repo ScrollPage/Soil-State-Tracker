@@ -5,9 +5,17 @@ import React from "react";
 import styled from "styled-components";
 import { useState } from "react";
 import { Steps } from "antd";
-import { IdcardOutlined, TeamOutlined } from "@ant-design/icons";
+import {
+  IdcardOutlined,
+  SecurityScanOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
+import { ensureRedirectToData } from "@/utils.ts/ensure";
+import { GetServerSideProps } from "next";
 
-const Register = () => {
+interface IRegister {}
+
+const Register = ({}: IRegister) => {
   const [step, setStep] = useState(0);
   return (
     <SRegister>
@@ -26,6 +34,7 @@ const Register = () => {
           <SRegisterSteps>
             <Steps size="small" current={step}>
               <Steps.Step title="Логин" icon={<IdcardOutlined />} />
+              <Steps.Step title="E-mail" icon={<SecurityScanOutlined />} />
               <Steps.Step title="Компания" icon={<TeamOutlined />} />
             </Steps>
           </SRegisterSteps>
@@ -39,6 +48,15 @@ const Register = () => {
 };
 
 export default Register;
+
+export const getServerSideProps: GetServerSideProps<IRegister> = async (
+  ctx
+) => {
+  ensureRedirectToData(ctx);
+  return {
+    props: {},
+  };
+};
 
 const SRegister = styled.div`
   display: flex;

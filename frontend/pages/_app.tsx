@@ -13,7 +13,8 @@ import Cookie from "js-cookie";
 import store from "@/store/store";
 import axios from "axios";
 import Alert from "@/components/UI/Alert";
-import { AppProps } from "next/app";
+import App, { AppContext, AppProps } from "next/app";
+import cookies from "next-cookies";
 
 NProgress.configure({
   showSpinner: false,
@@ -24,7 +25,11 @@ Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+interface IMyApp extends AppProps {
+  isAuth: boolean;
+}
+
+const MyApp = ({ Component, pageProps, isAuth }: IMyApp) => {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: stylesheet }} />
@@ -54,7 +59,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         >
           <Provider store={store}>
             <Alert />
-            <PrivateLayout>
+            <PrivateLayout isAuth={isAuth}>
               <Component {...pageProps} />
             </PrivateLayout>
           </Provider>
@@ -62,6 +67,14 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </>
     </>
   );
+};
+
+MyApp.getInitialProps = async (appContext: AppContext) => {
+  const appProps = await App.getInitialProps(appContext);
+  const token = cookies(appContext.ctx)?.token;
+  const isAuth = token ? true : false;
+
+  return { ...appProps, isAuth };
 };
 
 const makestore = () => store;

@@ -2,7 +2,7 @@ import cookies from 'next-cookies';
 import { GetServerSidePropsContext } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
-export const ensureRedirectToHomePage = (ctx: GetServerSidePropsContext<ParsedUrlQuery>) => {
+export const ensureRedirectToData = (ctx: GetServerSidePropsContext<ParsedUrlQuery>) => {
   const token = cookies(ctx)?.token;
   if (token) {
     ctx.res.writeHead(302, { Location: '/data' });

@@ -6,31 +6,39 @@ import { SHeaderMenu, SNavLink } from "./styles";
 interface INavitem {
   path: string;
   name: string;
+  isPrivate: boolean;
 }
 
-const publicNavItems: INavitem[] = [
-  { path: "/", name: "Главная" },
-  { path: "/about", name: "О продукте" },
-  { path: "/about", name: "Купить" },
+const navItems: INavitem[] = [
+  { isPrivate: false, path: "/", name: "Главная" },
+  { isPrivate: false, path: "/about", name: "О продукте" },
+
+  { isPrivate: true, path: "/", name: "Главная" },
+  { isPrivate: true, path: "/about", name: "О продукте" },
+  { isPrivate: true, path: "/data", name: "Данные" },
+  { isPrivate: true, path: "/manage", name: "Управление" },
+  { isPrivate: true, path: "/support", name: "Поддержка" },
 ];
 
-const privateNavItems: INavitem[] = [{ path: "/data", name: "Данные" }];
-
-const navItems: INavitem[] = [...publicNavItems, ...privateNavItems];
-
-export const renderLinks = (isDrower?: boolean) => {
+export const renderLinks = (isAuth: boolean, isDrower?: boolean) => {
   const router = useRouter();
-  return navItems.map((item, index) => (
-    <Link key={`navlink__key__${item.path}__${index}`} href={item.path}>
-      <SNavLink isDrower={isDrower} active={router.pathname === item.path}>
-        {item.name}
-      </SNavLink>
-    </Link>
-  ));
+  return navItems
+    .filter((item) => item.isPrivate === isAuth)
+    .map((item, index) => (
+      <Link key={`navlink__key__${item.path}__${index}`} href={item.path}>
+        <SNavLink isDrower={isDrower} active={router.pathname === item.path}>
+          {item.name}
+        </SNavLink>
+      </Link>
+    ));
 };
 
-const HeaderMenu = () => {
-  return <SHeaderMenu>{renderLinks()}</SHeaderMenu>;
+interface IHeaderMenu {
+  isAuth: boolean;
+}
+
+const HeaderMenu = ({ isAuth }: IHeaderMenu) => {
+  return <SHeaderMenu>{renderLinks(isAuth, false)}</SHeaderMenu>;
 };
 
 export default HeaderMenu;

@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import { instance, instanceWithOutHeaders } from '@/api';
 import { ThunkType } from '@/types/thunk';
 import Cookie from 'js-cookie';
@@ -9,36 +10,40 @@ export const authSignup = (
   firstName: string,
   lastName: string,
   password: string,
+  setStep: Dispatch<SetStateAction<number>>
 ): ThunkType => async dispatch => {
   await instanceWithOutHeaders
-    .post('/api/v1/register/ ', {
+    .post('/auth/users/ ', {
       email,
       first_name: firstName,
       last_name: lastName,
       password,
     })
     .then(res => {
-      dispatch(show('Вы успешно зарегистрировались!', 'success'));
+      Cookie.set('email', email);
+      Cookie.set('password', password);
+      dispatch(show('Вы успешно создали аккаунт!', 'success'));
+      setStep(e => e + 1);
     })
     .catch(err => {
-      dispatch(show('Ошибка в регистрации!', 'warning'));
+      dispatch(show('Ошибка в создании аккаунта!', 'warning'));
     });
 };
 
 export const emailActivate = (token: string): ThunkType => async dispatch => {
   await instanceWithOutHeaders
-    .post('/api/v1/activation/email/ ', {
+    .post('/api/activate/', {
       token,
     })
     .then(res => {
-      dispatch(show('Активация прошла успешно! Можете войти в аккаунт!', 'success'));
+      dispatch(show('Активация прошла успешно!', 'success'));
     })
     .catch(err => {
       dispatch(show('Ошибка активации!', 'warning'));
     });
 };
 
-export const authLogin = (email: string, password: string): ThunkType => async dispatch => {
+export const authLogin = (email: string, password: string, isRouterPush: boolean): ThunkType => async dispatch => {
   await instanceWithOutHeaders
     .post('/auth/jwt/create/', {
       email,
@@ -50,19 +55,23 @@ export const authLogin = (email: string, password: string): ThunkType => async d
       Cookie.set('token', res.data.access);
       Cookie.set('expirationDate', expirationDate);
 
-      dispatch(authInfo(true));
       dispatch(checkAuthTimeout(3600 * 24));
-      dispatch(show('Вы успешно вошли!', 'success'));
+      if (isRouterPush) {
+        dispatch(authInfo(true));
+        dispatch(show('Вы успешно вошли!', 'success'));
+      } else {
+        dispatch(authInfo(false));
+      }
     })
     .catch(err => {
-      dispatch(show('Неверный логин или пароль!', 'warning'));
+      dispatch(show('Ошибка входа, возможно у вас неверный логин или пароль!', 'warning'));
     });
 };
 
 export const authInfo = (isRouterPush: boolean): ThunkType => async dispatch => {
   const token = Cookie.get('token');
   await instance(token)
-    .get('/api/users/me/')
+    .get('/auth/users/me/')
     .then(res => {
       Cookie.set('firstName', res.data.first_name);
       Cookie.set('lastName', res.data.last_name);
@@ -70,7 +79,7 @@ export const authInfo = (isRouterPush: boolean): ThunkType => async dispatch => 
       Cookie.set('email', res.data.email);
 
       if (isRouterPush) {
-        Router.push({ pathname: '/' }, undefined, { shallow: true });
+        Router.push({ pathname: '/data' }, undefined, { shallow: true });
       }
 
       console.log('Информация успешно занесена в куки');
@@ -113,4 +122,45 @@ export const authCheckState = (): ThunkType => dispatch => {
     }
   }
 };
+
+export const authCheckActivate = (
+  setStep: Dispatch<SetStateAction<number>>
+): ThunkType => async dispatch => {
+  const email = Cookie.get('email');
+  await instanceWithOutHeaders
+    .get(`/api/activity/${email}/`)
+    .then(res => {
+      if (res.data?.is_active === true) {
+        const password = Cookie.get('password');
+        dispatch(authLogin(email, password, false));
+        setStep(e => e + 1);
+        dispatch(show('Ваш аккаунт подтвержден!', 'success'));
+      }
+      dispatch(show('Ваш аккаунт не подтвержден!', 'warning'));
+    })
+    .catch(err => {
+      dispatch(show('Ошибка в подтверждении аккаунта!', 'warning'));
+    });
+};
+
+export const setAuthActivate = (isActivate: boolean) => ({
+  type: 'SET_AUTH_ACTIVATE', isActivate
+} as const)
+
+export const authSetCompany = (name: string, info: string): ThunkType => async dispatch => {
+  const token = Cookie.get('token');
+  await instance(token)
+    .post('/api/company/', {
+      name,
+      info,
+    })
+    .then(res => {
+      Router.push({ pathname: '/data' }, undefined, { shallow: true });
+      dispatch(show('Вы успешно создали компанию!', 'warning'));
+    })
+    .catch(err => {
+      dispatch(show('Ошибка в создании компании!', 'warning'));
+    });
+};
+
 
