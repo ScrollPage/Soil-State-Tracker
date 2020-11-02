@@ -7,6 +7,7 @@ class CompanySerializer(serializers.ModelSerializer):
     '''Создание компании'''
     workers = ClientDetailSerializer(many=True, read_only=True)
     admin = ClientDetailSerializer(read_only=True)
+    is_admin = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Company

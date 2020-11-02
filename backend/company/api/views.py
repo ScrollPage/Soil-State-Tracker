@@ -1,4 +1,5 @@
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q, Count
 
 from company.models import Company
 from .service import PermissionSerializerModelViewSet
@@ -10,7 +11,6 @@ from .permissions import IsAdmin
 
 class CompanyViewSet(PermissionSerializerModelViewSet):
     '''Все о компаниях'''
-    queryset = Company.objects.all()
     serializer_class = CompanySerializer
     serializer_class_by_action = {
         'update': CompanyUpdateSerializer,
@@ -22,6 +22,11 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
         'retirieve': [IsAuthenticated],
         'list': [IsAuthenticated]
     }
+
+    def get_queryset(self):
+        return Company.objects.all().annotate(
+            is_admin=Count('admin', filter=Q(admin=self.request.user))
+        )
 
     def perform_create(self, serializer):
         serializer.save(admin=self.request.user)
