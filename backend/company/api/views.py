@@ -24,9 +24,9 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     }
 
     def get_queryset(self):
-        return Company.objects.all().annotate(
+        return Company.objects.filter(admin=self.request.user).annotate(
             is_admin=Count('admin', filter=Q(admin=self.request.user))
         )
-
+    
     def perform_create(self, serializer):
         serializer.save(admin=self.request.user)
