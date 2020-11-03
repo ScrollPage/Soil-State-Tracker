@@ -12,7 +12,13 @@ const Input: React.FC<FieldAttributes<any>> = ({
   const isShowError = touched[field.name] && errors[field.name];
   return (
     <SInput>
-      <SInputTag {...field} {...props} id={name} isShowError={isShowError} />
+      <SInputTag
+        {...field}
+        {...props}
+        id={name}
+        isShowError={isShowError}
+        width={props?.width}
+      />
       {isShowError && <SInputError>{errors[field.name]}</SInputError>}
     </SInput>
   );

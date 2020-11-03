@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { SItemBtn } from "@/components/Header/styles";
 
 export const SDrower = styled.div`
   position: fixed;
@@ -12,16 +13,42 @@ export const SDrower = styled.div`
   z-index: 12;
 `;
 
+export const SDrowerPages = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const SDrowerAuth = styled.div`
+  display: flex;
+  flex-direction: column;
+  ${SItemBtn} {
+    &:first-of-type {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+  }
+`;
+
 export const SDrowerInner = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
 `;
 
 export const SDrowerItem = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
+  &:last-of-type {
+    height: 100%;
+  }
+  ${SDrowerPages} {
+    flex: 1;
+  }
+  ${SDrowerAuth} {
+    flex: 0;
+  }
 `;
 
 export const SDrowerClose = styled.div`

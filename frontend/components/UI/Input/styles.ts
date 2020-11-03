@@ -8,11 +8,11 @@ export const SInput = styled.div`
   width: 100%;
 `;
 
-export const SInputTag = styled.input <{ isShowError?: boolean }> `
+export const SInputTag = styled.input <{ isShowError?: boolean, width?: string }> `
   border: 1.5px solid ${({ isShowError }) => isShowError ? 'red' : '#000'};
+  width: ${({ width }) => width ? width : '300px'};
   padding: 6px 10px;
   font-size: 16px;
-  width: 300px;
   border-radius: 2px;
 `;
 

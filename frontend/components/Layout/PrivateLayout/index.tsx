@@ -1,11 +1,11 @@
 import Container from "@/components/Container";
 import Header from "@/components/Header";
-import React, { useRef } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Drower from "../Drower";
 import { SPrivateLayout, SMain } from "./styles";
 import gsap from "gsap";
+import { useDispatch } from "react-redux";
+import { authCheckState } from "@/store/actions/auth";
 
 interface IPrivateLayout {
   children: React.ReactNode;
@@ -13,6 +13,8 @@ interface IPrivateLayout {
 }
 
 const PrivateLayout: React.FC<IPrivateLayout> = ({ children, isAuth }) => {
+  const dispatch = useDispatch();
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   let layout = useRef<HTMLDivElement>(null);
@@ -33,15 +35,19 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children, isAuth }) => {
     }
   }, [menuOpen]);
 
+  useEffect(() => {
+    dispatch(authCheckState());
+  }, []);
+
   return (
     <>
       <SPrivateLayout ref={layout}>
-        <Header setMenuOpen={setMenuOpen} isAuth={isAuth} />
+        <Header isAuth={isAuth} setMenuOpen={setMenuOpen} />
         <SMain>
           <Container>{children}</Container>
         </SMain>
       </SPrivateLayout>
-      <Drower setMenuOpen={setMenuOpen} menuOpen={menuOpen} />
+      <Drower isAuth={isAuth} setMenuOpen={setMenuOpen} menuOpen={menuOpen} />
     </>
   );
 };
