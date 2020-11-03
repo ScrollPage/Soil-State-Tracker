@@ -5,6 +5,7 @@ import { SButton } from "@/components/UI/Button";
 import { useDispatch } from "react-redux";
 import { addCompany } from "@/store/actions/company";
 import { object, string, ref } from "yup";
+import { LoadingOutlined } from "@ant-design/icons";
 
 export const validationCompany = object().shape({
   companyName: string()
@@ -101,7 +102,15 @@ const CompanyCreateForm = ({
             component={Input}
           />
           <SButton htmlType="submit" disabled={props.isSubmitting}>
-            {isInnerModal ? "Подтвердить" : "Создать"}
+            {!props.isSubmitting ? (
+              isInnerModal ? (
+                "Подтвердить"
+              ) : (
+                "Создать"
+              )
+            ) : (
+              <LoadingOutlined />
+            )}
           </SButton>
         </Form>
       )}

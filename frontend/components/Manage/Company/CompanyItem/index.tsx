@@ -1,9 +1,11 @@
+import { Tooltip } from "antd";
 import { IChangeCompanyModalProps } from "@/components/Modal/ChangeCompanyModal";
 import { IDeleteCompanyModalProps } from "@/components/Modal/DeleteCompanyModal";
 import { SButton } from "@/components/UI/Button";
 import { modalShow } from "@/store/actions/modal";
 import { ICompany } from "@/types/company";
 import { Card } from "antd";
+import Link from "next/link";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { SCompanyItem, SCompanyItemMain, SCompanyItemBtns } from "./styles";
@@ -42,7 +44,18 @@ const CompanyItem = ({ companyItem }: ICompanyItemFC) => {
 
   return (
     <SCompanyItem>
-      <Card title={companyItem.name} style={{ width: 300, height: 329 }}>
+      <Card
+        title={
+          <Tooltip title="Перейти к управлению компанией" color={"blue"}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Link href="/control/[ID]" as={`/control/${companyItem.id}`}>
+                <a>{companyItem.name}</a>
+              </Link>
+            </div>
+          </Tooltip>
+        }
+        style={{ width: 300, height: 329 }}
+      >
         <SCompanyItemMain>
           <p>
             <span>Сайт:</span>&nbsp;
