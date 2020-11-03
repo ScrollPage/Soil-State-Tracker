@@ -1,3 +1,4 @@
+from rest_framework.exceptions import NotFound
 from django.db import models
 
 from client.models import Client
@@ -12,6 +13,16 @@ class Company(models.Model):
 
     def __str__(self):
         return f'company {self.name}'
+
+    def get_worker(self, uid):
+        try:
+            worker = self.workers.get(id=uid)
+        except Client.DoesNotExist:
+            raise NotFound('No such worker in your company.')
+        return worker
+    
+    def no_user_detectors(self):
+        return self.detectors.filter(user=None)
 
     class Meta:
         verbose_name = 'Компания'
