@@ -12,4 +12,6 @@ export const SCompanyTitle = styled.h1`
 `;
 export const SCompanyMain = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 `; 
