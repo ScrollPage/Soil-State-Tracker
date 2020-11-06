@@ -11,8 +11,6 @@ interface IManage {
 }
 
 export default function Manage({ company }: IManage) {
-  console.log(company);
-
   return (
     <SManage>
       <Head>

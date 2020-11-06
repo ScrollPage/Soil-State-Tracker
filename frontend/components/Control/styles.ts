@@ -1,17 +1,19 @@
 import styled from "styled-components";
 
-export const SCompany = styled.div`
+export const SControl = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
-export const SCompanyTitle = styled.h1`
+
+export const SControlTitle = styled.h1`
   display: flex;
   justify-content: center;
   font-weight: 800;
   font-size: 36px;
 `;
-export const SCompanyMain = styled.div`
+
+export const SControlMain = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-`; 
+  flex-direction: row;
+`;

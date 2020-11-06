@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 export const SPrivateLayout = styled.div`
   height: 100%;
+  -webkit-transform: translate(0,0);
+  transform: translate(0,0);
 `;
 
 export const SMain = styled.div`

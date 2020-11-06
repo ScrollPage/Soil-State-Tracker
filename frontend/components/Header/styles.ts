@@ -29,6 +29,7 @@ export const SItem = styled.div`
 `;
 
 export const SHeader = styled.div`
+  display: block;
   position: fixed;
   top: 0;
   left: 0;

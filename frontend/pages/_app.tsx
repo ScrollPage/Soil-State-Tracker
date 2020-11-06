@@ -15,6 +15,7 @@ import axios from "axios";
 import Alert from "@/components/UI/Alert";
 import App, { AppContext, AppProps } from "next/app";
 import cookies from "next-cookies";
+import RootModal from "@/components/Modal";
 
 NProgress.configure({
   showSpinner: false,
@@ -59,6 +60,7 @@ const MyApp = ({ Component, pageProps, isAuth }: IMyApp) => {
         >
           <Provider store={store}>
             <Alert />
+            <RootModal />
             <PrivateLayout isAuth={isAuth}>
               <Component {...pageProps} />
             </PrivateLayout>
@@ -100,6 +102,8 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   body {
+    height: 100% !important; 
+    width: 100%;
     overscroll-behavior: none;
     overflow-x: hidden;
     overflow-y: scroll;

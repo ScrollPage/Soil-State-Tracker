@@ -24,6 +24,7 @@ const LoginForm = () => {
         }}
         validationSchema={validationSchema}
         onSubmit={async (values, actions) => {
+          actions.setSubmitting(true);
           await dispatch(authLogin(values.email, values.password, true));
           setTimeout(() => {
             actions.setSubmitting(false);

@@ -38,15 +38,19 @@ const validationLogin = object().shape({
     .oneOf([ref("password"), ""], "Пароли должны совпадать"),
 });
 
-export const validationCompany = object().shape({
-  companyName: string()
+const validationCompany = object().shape({
+  name: string()
     .min(3, "Слишком короткое название компании")
     .max(15, "Слишком длинное название компании")
     .required("Введите название компании"),
-  companyInfo: string()
+  info: string()
     .min(3, "Слишком короткая информация о компании")
     .max(15, "Слишком длинная информация о компании")
-    .required("Введите нформацию о компании"),
+    .required("Введите информацию о компании"),
+  url: string()
+    .min(3, "Слишком короткая ссылка")
+    .max(15, "Слишком длинная ссылка")
+    .required("Введите ссылку на сайт компании"),
 });
 
 interface IRegisterForm {
@@ -68,8 +72,9 @@ const RegisterForm: React.FC<IRegisterForm> = ({ step, setStep }) => {
           lastName: "",
           password: "",
           confirmPassword: "",
-          companyName: "",
-          companyInfo: "",
+          name: "",
+          url: "",
+          info: "",
         }}
         step={step}
         setStep={setStep}
@@ -77,13 +82,7 @@ const RegisterForm: React.FC<IRegisterForm> = ({ step, setStep }) => {
         onSubmit={(values, helpers) => {
           helpers.setSubmitting(true);
           try {
-            dispatch(
-              addCompany(
-                "/api/company/",
-                values.companyName,
-                values.companyInfo
-              )
-            );
+            dispatch(addCompany(values.name, values.url, values.info));
             push({ pathname: "/data" }, undefined, { shallow: true });
           } catch {}
 
