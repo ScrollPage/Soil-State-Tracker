@@ -1,6 +1,3 @@
-import { ICompany } from './company';
-import { IClient } from './client';
-
 export interface IDetectorData {
   id: number;
   timestamp: string;
@@ -16,7 +13,5 @@ export interface IDetector {
   id: number;
   x: number;
   y: number;
-  company: ICompany;
-  user: IClient;
 }
 

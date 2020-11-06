@@ -6,7 +6,7 @@ import {
   SFormikStepperBtn,
   SFormikStepHeader,
 } from "./styles";
-import { Formik, Form, Field, FormikValues, FormikConfig } from "formik";
+import { Formik, Form, FormikValues, FormikConfig } from "formik";
 import { SButton } from "@/components/UI/Button";
 import Input from "@/components/UI/Input";
 import TextArea from "@/components/UI/TextArea";
@@ -93,35 +93,14 @@ const RegisterForm: React.FC<IRegisterForm> = ({ step, setStep }) => {
         }}
       >
         <FormikStep validationSchema={validationLogin}>
-          <Field
-            type="text"
-            name="email"
-            placeholder="E-mail"
-            component={Input}
-          />
-          <Field
-            type="text"
-            name="firstName"
-            placeholder="Имя"
-            component={Input}
-          />
-          <Field
-            type="text"
-            name="lastName"
-            placeholder="Фамилия"
-            component={Input}
-          />
-          <Field
-            type="password"
-            name="password"
-            placeholder="Пароль"
-            component={Input}
-          />
-          <Field
+          <Input type="text" name="email" placeholder="E-mail" />
+          <Input type="text" name="firstName" placeholder="Имя" />
+          <Input type="text" name="lastName" placeholder="Фамилия" />
+          <Input type="password" name="password" placeholder="Пароль" />
+          <Input
             type="password"
             name="confirmPassword"
             placeholder="Повторите пароль"
-            component={Input}
           />
         </FormikStep>
         <FormikStep>
@@ -130,18 +109,12 @@ const RegisterForm: React.FC<IRegisterForm> = ({ step, setStep }) => {
           </SFormikStepHeader>
         </FormikStep>
         <FormikStep validationSchema={validationCompany}>
-          <Field
+          <Input
             type="text"
             name="companyName"
             placeholder="Название компании"
-            component={Input}
           />
-          <Field
-            type="text"
-            name="companyInfo"
-            placeholder="Информация о компании"
-            component={TextArea}
-          />
+          <TextArea name="companyInfo" placeholder="Информация о компании" />
         </FormikStep>
       </FormikStepper>
     </SRegisterForm>

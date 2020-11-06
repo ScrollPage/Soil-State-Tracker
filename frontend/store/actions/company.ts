@@ -1,4 +1,3 @@
-import { ICompany } from '@/types/company';
 import { addCompanyMutate, changeCompanyMutate, deleteCompanyMutate } from '@/mutates/company';
 import { trigger } from 'swr';
 import { ThunkType } from '@/types/thunk';
