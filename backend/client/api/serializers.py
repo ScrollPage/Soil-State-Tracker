@@ -15,7 +15,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Client
-        fields = ['email', 'first_name', 'last_name', 'my_detectors']
+        fields = ['id', 'email', 'first_name', 'last_name', 'my_detectors']
 
 class ClientActivitySerializer(serializers.ModelSerializer):
     '''Сериализация активности контакта'''
