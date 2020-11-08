@@ -4,7 +4,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework import status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Prefetch
 
 from company.models import Company
 from detector.models import Detector
@@ -40,9 +40,10 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     }
 
     def get_queryset(self):
-        return Company.objects.filter(admin=self.request.user).annotate(
-            is_admin=Count('admin', filter=Q(admin=self.request.user))
-        )
+        return Company.objects.filter(admin=self.request.user) \
+            .select_related('admin') \
+            .annotate(is_admin=Count('admin', filter=Q(admin__id=self.request.user.id)))
+            
 
     def perform_create(self, serializer):
         serializer.save(admin=self.request.user)
@@ -51,7 +52,17 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     def workers(self, request, *args, **kwargs):
         pk = kwargs['pk']
         company = get_company_or_404(self.get_queryset(), pk)
-        workers = company.workers.all()
+        workers = company.workers.all() \
+            .prefetch_related(
+                Prefetch(
+                    'my_detectors',
+                    queryset=Detector.objects.all().only(
+                        'id',
+                        'x',
+                        'y'
+                    )
+                )
+            )
         serializer = self.get_serializer(workers, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
@@ -88,6 +99,6 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
         serializer.is_valid(raise_exception=True)
         pk = kwargs['pk']
         company = get_company_or_404(self.get_queryset(), pk)
-        detectors = company.no_user_detectors().filter(id__in=serializer.data['detectors'])
+        detectors = company.detectors.filter(id__in=serializer.data['detectors'])
         detectors.update(user=None)
         return Response(status=status.HTTP_200_OK)
