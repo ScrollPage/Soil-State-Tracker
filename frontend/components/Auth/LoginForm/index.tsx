@@ -33,17 +33,15 @@ const LoginForm = () => {
       >
         {(props: FormikProps<any>) => (
           <Form>
-            <Field
+            <Input
               type="text"
               name="email"
               placeholder="E-mail"
-              component={Input}
             />
-            <Field
+            <Input
               type="password"
               name="password"
               placeholder="Пароль"
-              component={Input}
             />
             <SButton htmlType="submit" width={"300px"}>
               Войти

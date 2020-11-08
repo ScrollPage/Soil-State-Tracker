@@ -54,10 +54,12 @@ const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen, isAuth }) => {
     push({ pathname: "/register" }, undefined, {
       shallow: true,
     });
+    setMenuOpen(false);
   };
 
   const logoutHandler = () => {
     dispatch(logout());
+    setMenuOpen(false);
   };
 
   return (
@@ -76,7 +78,7 @@ const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen, isAuth }) => {
           <SDrowerAuth>
             {!isAuth ? (
               <>
-                <SItemBtn>
+                <SItemBtn onClick={() => setMenuOpen(false)}>
                   <SItemLink href={"/login"}>
                     <a>Вход</a>
                   </SItemLink>

@@ -1,25 +1,25 @@
-import { FieldAttributes } from "formik";
+import { useField } from "formik";
 import React from "react";
+import { InputHTMLAttributes } from "react";
 import { SInput, SInputTag, SInputError } from "./styles";
 
-const Input: React.FC<FieldAttributes<any>> = ({
-  field,
-  form: { touched, errors },
-  name,
-  isTextArea,
-  ...props
-}) => {
-  const isShowError = touched[field.name] && errors[field.name];
+type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+  name: string;
+  width?: string;
+};
+
+const Input: React.FC<InputProps> = (props) => {
+  const [field, meta] = useField(props);
+  const isShowError = meta.touched && !!meta.error;
   return (
     <SInput>
       <SInputTag
         {...field}
         {...props}
-        id={name}
         isShowError={isShowError}
         width={props?.width}
       />
-      {isShowError && <SInputError>{errors[field.name]}</SInputError>}
+      {isShowError && <SInputError>{meta.error}</SInputError>}
     </SInput>
   );
 };

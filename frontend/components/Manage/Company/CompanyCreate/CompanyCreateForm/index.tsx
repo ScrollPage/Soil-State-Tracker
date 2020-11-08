@@ -1,10 +1,10 @@
 import React from "react";
-import { Formik, FormikProps, Form, Field } from "formik";
+import { Formik, FormikProps, Form } from "formik";
 import Input from "@/components/UI/Input";
 import { SButton } from "@/components/UI/Button";
 import { useDispatch } from "react-redux";
 import { addCompany } from "@/store/actions/company";
-import { object, string, ref } from "yup";
+import { object, string } from "yup";
 import { LoadingOutlined } from "@ant-design/icons";
 
 export const validationCompany = object().shape({
@@ -80,26 +80,23 @@ const CompanyCreateForm = ({
     >
       {(props: FormikProps<FormValues>) => (
         <Form>
-          <Field
+          <Input
             type="text"
             name="companyName"
             placeholder="Название компании"
             width={"100%"}
-            component={Input}
           />
-          <Field
+          <Input
             type="text"
             name="companyUrl"
             placeholder="Ссылка на сайт"
             width={"100%"}
-            component={Input}
           />
-          <Field
+          <Input
             type="text"
             name="companyInfo"
             placeholder="Описание компании"
             width={"100%"}
-            component={Input}
           />
           <SButton htmlType="submit" disabled={props.isSubmitting}>
             {!props.isSubmitting ? (

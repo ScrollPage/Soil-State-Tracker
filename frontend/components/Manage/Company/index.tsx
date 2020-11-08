@@ -1,4 +1,3 @@
-import { Card } from "antd";
 import { ICompany } from "@/types/company";
 import React from "react";
 import useSWR from "swr";
@@ -7,7 +6,7 @@ import { SCompany, SCompanyTitle, SCompanyMain } from "./styles";
 import CompanyCreate from "./CompanyCreate";
 
 interface ICompanyFC {
-  company: ICompany[];
+  company: ICompany[] | null;
 }
 
 const renderCompanyItems = (company: ICompany[]) => {
@@ -28,8 +27,8 @@ const Company = ({ company }: ICompanyFC) => {
     <SCompany>
       <SCompanyTitle>Ваши компании</SCompanyTitle>
       <SCompanyMain>
-        {company ? (
-          company.length !== 0 ? (
+        {data ? (
+          data.length !== 0 ? (
             renderCompanyItems(data)
           ) : null
         ) : error ? (

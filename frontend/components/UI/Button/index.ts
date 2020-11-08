@@ -1,8 +1,12 @@
 import styled, { css } from 'styled-components';
 import { Button } from 'antd';
 
-export const SButton = styled(Button) <{ width?: string, iswhite?: string, isred?: string }>`
+export const SButton = styled(Button) <{ width?: string, iswhite?: string, isred?: string, height?: string }>`
   width: ${({ width }) => width || '100%'};
+  height: ${({ height }) => height || 'auto'};
+  display: flex;
+  justify-content: center;
+  align-items: center;
   ${({ iswhite }) => iswhite === 'true' && css`
     background-color: #fff;
     color: #000;

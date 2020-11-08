@@ -7,7 +7,7 @@ import Head from "next/head";
 import styled from "styled-components";
 
 interface IManage {
-  company?: ICompany[];
+  company: ICompany[] | null;
 }
 
 export default function Manage({ company }: IManage) {

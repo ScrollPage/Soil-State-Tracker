@@ -1,19 +1,19 @@
-import { FieldAttributes } from "formik";
-import React from "react";
+import { useField } from "formik";
+import React, { TextareaHTMLAttributes } from "react";
 import { STextArea, STextAreaTag, STextAreaError } from "./styles";
 
-const TextArea: React.FC<FieldAttributes<any>> = ({
-  field,
-  form: { touched, errors },
-  name,
-  isTextArea,
-  ...props
-}) => {
-  const isShowError = touched[field.name] && errors[field.name];
+type InputProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  name: string;
+  width?: string;
+};
+
+const TextArea: React.FC<InputProps> = (props) => {
+  const [field, meta] = useField(props);
+  const isShowError = meta.touched && !!meta.error;
   return (
     <STextArea>
-      <STextAreaTag {...field} {...props} id={name} isShowError={isShowError} />
-      {isShowError && <STextAreaError>{errors[field.name]}</STextAreaError>}
+      <STextAreaTag {...field} {...props} isShowError={isShowError} />
+      {isShowError && <STextAreaError>{meta.error}</STextAreaError>}
     </STextArea>
   );
 };
