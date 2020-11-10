@@ -47,7 +47,6 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
 
         @cached_as(queryset)
         def _annotate_queryset(queryset=queryset):
-            print('asdasdasd')
             return queryset \
                 .select_related('admin') \
                 .annotate(is_admin=Count('admin', filter=Q(admin__id=self.request.user.id)))

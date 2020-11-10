@@ -23,6 +23,11 @@ yarn dev
 python -m venv env
 env\Scripts\activate.bat
 pip install -r req.txt
+```
+Then you must to run your Redis server by .exe or in your docker with following command: 
+```docker
+docker run -d -p 6379:6379 redis
+```
 
 python manage.py runserver
 ```
