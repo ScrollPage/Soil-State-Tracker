@@ -25,11 +25,19 @@ env\Scripts\activate.bat
 pip install -r req.txt
 ```
 Then you must to run your Redis server by .exe or in your docker with following command: 
-```docker
+```bash
 docker run -d -p 6379:6379 redis
 ```
+After you done that you should
+```bash
+python manage.py test
+```
+And ensure that everything is working just fine
 
+And then... 
+```bash
 python manage.py runserver
 ```
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
