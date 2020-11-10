@@ -47,6 +47,7 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
 
         @cached_as(queryset)
         def _annotate_queryset(queryset=queryset):
+            print('asdasdasd')
             return queryset \
                 .select_related('admin') \
                 .annotate(is_admin=Count('admin', filter=Q(admin__id=self.request.user.id)))
@@ -81,24 +82,16 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     def detectors(self, request, *args, **kwargs):
         pk = kwargs['pk']
         company = get_company_or_404(self.get_queryset(), pk)
-
-        @cached_as(company.detectors.all())
-        def _get_company_detectors(company=company):
-            return company.detectors.all()
-
-        serializer = self.get_serializer(_get_company_detectors(), many=True)
+        detectors = company.detectors.all()
+        serializer = self.get_serializer(detectors, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'])
     def detectors_to_transfer(self, request, *args, **kwargs):
         pk = kwargs['pk']
         company = get_company_or_404(self.get_queryset(), pk)
-
-        @cached_as(company.detectors.filter(user=None))
-        def _get_company_detectors(company=company):
-            return company.detectors.filter(user=None)
-
-        serializer = self.get_serializer(_get_company_detectors(), many=True)
+        detectors = company.detectors.filter(user=None)
+        serializer = self.get_serializer(detectors, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['post'])
