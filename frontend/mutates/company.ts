@@ -3,7 +3,6 @@ import { mutate } from 'swr';
 
 export const addCompanyMutate = (url: string, name: string, info: string, companyUrl: string) => {
   const companyItem: ICompany = {
-    admin: null,
     id: 0,
     info,
     is_admin: true,
@@ -12,10 +11,7 @@ export const addCompanyMutate = (url: string, name: string, info: string, compan
     workers: []
   }
   mutate(url, async (company: ICompany[]) => {
-    console.log(company)
     if (company) {
-      console.log('mutate_inner')
-      console.log([companyItem, ...company])
       return [...company, companyItem];
     }
   }, false);
@@ -40,7 +36,6 @@ export const changeCompanyMutate = (triggerUrl: string, id: number, name: string
         info,
         url
       };
-      console.log(newCompany)
       return newCompany;
     }
   }, false);

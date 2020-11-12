@@ -29,11 +29,10 @@ export const renderLinks = (
   const router = useRouter();
 
   const menuOpenHadler = () => {
-    if (isDrower) {
+    if (isDrower && setMenuOpen) {
       setMenuOpen(false);
     }
   };
-
   return navItems
     .filter((item) => item.isPrivate === isAuth)
     .map((item, index) => (

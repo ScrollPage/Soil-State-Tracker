@@ -50,12 +50,12 @@ export const authLogin = (email: string, password: string, isRouterPush: boolean
       password,
     })
     .then(res => {
-      const expirationDate = new Date(new Date().getTime() + 3600 * 1000 * 24);
+      const expirationDate = new Date(new Date().getTime() + 24 * 3600 * 1000);
 
       Cookie.set('token', res.data.access);
       Cookie.set('expirationDate', expirationDate);
 
-      dispatch(checkAuthTimeout(3600 * 24));
+      dispatch(checkAuthTimeout(24 * 3600 * 1000));
       if (isRouterPush) {
         dispatch(authInfo(true));
         dispatch(show('Вы успешно вошли!', 'success'));
@@ -104,7 +104,7 @@ export const logout = () => (dispatch: any) => {
 };
 
 export const checkAuthTimeout = (expirationTime: number): ThunkType => dispatch =>
-  setTimeout(() => dispatch(logout()), expirationTime * 1000);
+  setTimeout(() => dispatch(logout()), expirationTime);
 
 export const authCheckState = (): ThunkType => dispatch => {
   const token = Cookie.get('token');
@@ -118,7 +118,7 @@ export const authCheckState = (): ThunkType => dispatch => {
     if (expirationDate <= new Date()) {
       dispatch(logout());
     } else {
-      dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime()) / 1000));
+      dispatch(checkAuthTimeout(expirationDate.getTime() - new Date().getTime()));
     }
   }
 };
@@ -126,12 +126,12 @@ export const authCheckState = (): ThunkType => dispatch => {
 export const authCheckActivate = (
   setStep: Dispatch<SetStateAction<number>>
 ): ThunkType => async dispatch => {
-  const email = Cookie.get('email');
+  const email = Cookie.get('email') as string;
   await instanceWithOutHeaders
     .get(`/api/activity/${email}/`)
     .then(res => {
       if (res.data?.is_active === true) {
-        const password = Cookie.get('password');
+        const password = Cookie.get('password') as string;
         dispatch(authLogin(email, password, false));
         setStep(e => e + 1);
         dispatch(show('Ваш аккаунт подтвержден!', 'success'));

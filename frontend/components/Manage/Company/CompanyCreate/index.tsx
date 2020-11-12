@@ -1,14 +1,16 @@
 import React from "react";
-import { SCompanyCreate } from "./styles";
-import { Card } from "antd";
+import { SCompanyCreate, SCompanyCreateHeader, SCompanyCreateMain } from "./styles";
 import CompanyCreateForm from "./CompanyCreateForm";
 
 const CompanyCreate = () => {
   return (
     <SCompanyCreate>
-      <Card title="Создать компанию" style={{ width: 300 }}>
+      <SCompanyCreateHeader>
+        <p>Создать компанию</p>
+      </SCompanyCreateHeader>
+      <SCompanyCreateMain>
         <CompanyCreateForm />
-      </Card>
+      </SCompanyCreateMain>
     </SCompanyCreate>
   );
 };

@@ -1,8 +1,7 @@
 import { ICompany } from "@/types/company";
 import { IDetector } from "@/types/detector";
 import { IWorker } from "@/types/user";
-import RenderArrayData from "@/utils.ts/renderArrayData";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import { useContext, createContext } from "react";
 import useSWR from "swr";
 import ControlSensors from "./ControlSensors";

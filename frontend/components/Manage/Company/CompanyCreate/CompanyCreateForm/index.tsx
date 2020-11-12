@@ -44,10 +44,8 @@ const CompanyCreateForm = ({
 }: ICompanyCreateForm) => {
   const dispatch = useDispatch();
 
-  const isInnerModal = !!changeHanlder;
-
   const createCompanyHandler = (values: FormValues) => {
-    if (isInnerModal) {
+    if (!!changeHanlder && initialValues) {
       changeHanlder(
         initialValues.id,
         values.companyName,
@@ -100,7 +98,7 @@ const CompanyCreateForm = ({
           />
           <SButton htmlType="submit" disabled={props.isSubmitting}>
             {!props.isSubmitting ? (
-              isInnerModal ? (
+              !!changeHanlder ? (
                 "Подтвердить"
               ) : (
                 "Создать"

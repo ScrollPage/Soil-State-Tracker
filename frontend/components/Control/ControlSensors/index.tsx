@@ -53,20 +53,23 @@ const ControlSensors = ({
   useEffect(() => {
     if (checkedList.length === 0) {
       setCheckAll(false);
+      setIndeterminate(false);
     }
   }, [checkedList]);
 
   return (
     <SControlSensors>
-      <SControlSensorsHeader>
-        <Checkbox
-          indeterminate={indeterminate}
-          onChange={onCheckAllChange}
-          checked={checkAll}
-        >
-          Выбрать все
-        </Checkbox>
-      </SControlSensorsHeader>
+      {detectors.length !== 0 && (
+        <SControlSensorsHeader>
+          <Checkbox
+            indeterminate={indeterminate}
+            onChange={onCheckAllChange}
+            checked={checkAll}
+          >
+            Выбрать все
+          </Checkbox>
+        </SControlSensorsHeader>
+      )}
       <SControlSensorsMain>
         {detectors.map((detector) => (
           <SensorItem

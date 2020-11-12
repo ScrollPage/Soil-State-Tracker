@@ -8,7 +8,7 @@ export const SPrivateLayout = styled.div`
 
 export const SMain = styled.div`
   padding-top: 60px;
-  height: calc(100vh - 60px);
+  /* background-color: #EEF2F7; */
 `;
 
 export const SBackDrop = styled.div`
