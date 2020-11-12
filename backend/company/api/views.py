@@ -81,16 +81,24 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     def detectors(self, request, *args, **kwargs):
         pk = kwargs['pk']
         company = get_company_or_404(self.get_queryset(), pk)
-        detectors = company.detectors.all()
-        serializer = self.get_serializer(detectors, many=True)
+
+        @cached_as(company.detectors.all())
+        def _get_company_detectors(company=company):
+            return company.detectors.all()
+
+        serializer = self.get_serializer(_get_company_detectors(), many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'])
     def detectors_to_transfer(self, request, *args, **kwargs):
         pk = kwargs['pk']
         company = get_company_or_404(self.get_queryset(), pk)
-        detectors = company.detectors.filter(user=None)
-        serializer = self.get_serializer(detectors, many=True)
+
+        @cached_as(company.detectors.filter(user=None))
+        def _get_company_detectors(company=company):
+            return company.detectors.filter(user=None)
+
+        serializer = self.get_serializer(_get_company_detectors(), many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['post'])
