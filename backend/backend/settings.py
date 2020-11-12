@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'cacheops',
     'corsheaders',
     'channels',
     'djoser',
@@ -218,4 +219,26 @@ DJOSER = {
     'ACTIVATION_URL': '#',
     'SEND_ACTIVATION_EMAIL': False,
     'SERIALIZERS': {},
+}
+
+# CacheOps
+CACHEOPS_REDIS = {
+    'host': '192.168.99.100', # redis-server is on same machine
+    'port': 6379,        # default redis port
+    'db': 1,             # SELECT non-default redis database
+                         # using separate redis db or redis instance
+                         # is highly recommended
+
+    'socket_timeout': 3,   # connection timeout in seconds, optional
+}
+
+CACHEOPS_DEFAULTS = {
+    'timeout': 60*60
+}
+
+CACHEOPS = {
+    'auth.permission': {'ops': 'all'},
+    'client.client': {'ops': 'all'},
+    'company.company': {'ops': 'all'},
+    'detector.detector': {'ops': 'all'},
 }

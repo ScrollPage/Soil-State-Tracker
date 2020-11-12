@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, Count, Prefetch
 
+from cacheops import cached_as, cached_view
+
 from company.models import Company
 from detector.models import Detector
 from .service import PermissionSerializerModelViewSet, get_company_or_404
@@ -39,11 +41,17 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
         'list': [IsAuthenticated]
     }
 
+
     def get_queryset(self):
-        return Company.objects.filter(admin=self.request.user) \
-            .select_related('admin') \
-            .annotate(is_admin=Count('admin', filter=Q(admin__id=self.request.user.id)))
-            
+        queryset = Company.objects.filter(admin=self.request.user)
+
+        @cached_as(queryset)
+        def _annotate_queryset(queryset=queryset):
+            return queryset \
+                .select_related('admin') \
+                .annotate(is_admin=Count('admin', filter=Q(admin__id=self.request.user.id)))
+
+        return _annotate_queryset()
 
     def perform_create(self, serializer):
         serializer.save(admin=self.request.user)
@@ -52,18 +60,21 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     def workers(self, request, *args, **kwargs):
         pk = kwargs['pk']
         company = get_company_or_404(self.get_queryset(), pk)
-        workers = company.workers.all() \
-            .prefetch_related(
-                Prefetch(
-                    'my_detectors',
-                    queryset=Detector.objects.all().only(
-                        'id',
-                        'x',
-                        'y'
+
+        @cached_as(company.workers.all())
+        def _get_workers(company=company):
+            return company.workers.all() \
+                .prefetch_related(
+                    Prefetch(
+                        'my_detectors',
+                        queryset=Detector.objects.all().only(
+                            'id',
+                            'x',
+                            'y'
+                        )
                     )
                 )
-            )
-        serializer = self.get_serializer(workers, many=True)
+        serializer = self.get_serializer(_get_workers(), many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
     @action(detail=False, methods=['get'])
