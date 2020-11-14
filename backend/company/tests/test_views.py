@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase
 from django.conf import settings
 
 import json
+from asgiref.sync import sync_to_async
 
 from client.models import Client
 from company.models import Company
@@ -32,6 +33,7 @@ class TestViews(APITestCase):
         Detector.objects.create(x=0, y=0, company=self.company, user=self.user2)
         Detector.objects.create(x=0, y=0, company=self.company, user=None)
 
+    
     def test_company_list_unauth(self):
         response = get_response('company-list', 'get')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

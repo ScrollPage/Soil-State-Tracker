@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .service import model_to_dict_with_none
-from chat.models import Chat
+from chat.models import Chat, NewChatNotification
 
 class ChatSerializer(serializers.ModelSerializer):
     '''Сериализация чата'''
@@ -19,3 +19,10 @@ class ChatSerializer(serializers.ModelSerializer):
         last_message = model_to_dict_with_none(last_message)
         res.update({'last_message': last_message})
         return res
+
+class NewChatNotificationSerializer(serializers.ModelSerializer):
+    '''Сериализация уведомлений о новых чатах'''
+    
+    class Meta:
+        model = NewChatNotification
+        fields = '__all__'

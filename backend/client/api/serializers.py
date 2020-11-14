@@ -23,3 +23,15 @@ class ClientActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = ['is_active']
+
+class ClientMeSerialzier(serializers.ModelSerializer):
+    '''Для сериализации пользователя'''
+
+    class Meta:
+        model = Client
+        fields = ['id', 'email', 'first_name', 'last_name', 'is_staff']
+
+    def to_representation(self, value):
+        res = super().to_representation(value)
+        res.update({'is_worker': bool(value.work.all())})
+        return res
