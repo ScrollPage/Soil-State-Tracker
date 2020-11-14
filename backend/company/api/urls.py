@@ -2,38 +2,38 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.urlpatterns import format_suffix_patterns
 from django.urls import path
 
-from . import views 
+from .views import CompanyViewSet 
 
 urlpatterns = [
     
 ]
 
-workers_list = views.CompanyViewSet.as_view({
+workers_list = CompanyViewSet.as_view({
     'get': 'workers'
 })
 
-detectors_list = views.CompanyViewSet.as_view({
+detectors_list = CompanyViewSet.as_view({
     'get': 'detectors'
 })
 
-detectors_transfer_list = views.CompanyViewSet.as_view({
+detectors_transfer_list = CompanyViewSet.as_view({
     'get': 'detectors_to_transfer'
 })
 
-add_detectors = views.CompanyViewSet.as_view({
+add_detectors = CompanyViewSet.as_view({
     'post': 'add_detectors'
 })
 
-remove_detectors = views.CompanyViewSet.as_view({
+remove_detectors = CompanyViewSet.as_view({
     'post': 'remove_detectors'
 })
 
-company = views.CompanyViewSet.as_view({
+company = CompanyViewSet.as_view({
     'post': 'create',
     'get': 'list'
 })
 
-company_detail = views.CompanyViewSet.as_view({
+company_detail = CompanyViewSet.as_view({
     'put': 'update',
     'patch': 'partial_update',
     'delete': 'destroy',

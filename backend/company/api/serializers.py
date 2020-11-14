@@ -23,6 +23,6 @@ class RemoveDetectorsSerializer(serializers.Serializer):
     '''Сериалзация списка идентификаторов'''
     detectors = serializers.ListField()
 
-class AddDetectorsSerialzier(RemoveDetectorsSerializer):
+class AddDetectorsSerializer(RemoveDetectorsSerializer):
     '''Сериализация списка идентификаторов и пользователя'''
     id = serializers.IntegerField()

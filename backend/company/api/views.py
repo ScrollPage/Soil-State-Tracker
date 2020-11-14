@@ -1,9 +1,7 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound
 from rest_framework import status
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
 from django.db.models import Q, Count, Prefetch
 
 from company.models import Company
@@ -13,7 +11,7 @@ from .serializers import (
     CompanySerializer, 
     CompanyUpdateSerializer,
     RemoveDetectorsSerializer,
-    AddDetectorsSerialzier
+    AddDetectorsSerializer
 )
 from client.api.serializers import ClientDetailSerializer
 from detector.api.serializers import DetectorSerializer
@@ -29,7 +27,7 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
         'workers': ClientDetailSerializer,
         'detectors': DetectorSerializer,
         'detectors_to_transfer': DetectorSerializer,
-        'add_detectors': AddDetectorsSerialzier,
+        'add_detectors': AddDetectorsSerializer,
         'remove_detectors': RemoveDetectorsSerializer,
     }
     permission_classes = [IsAuthenticated, IsAdmin]
@@ -38,11 +36,6 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
         'retrieve': [IsAuthenticated],
         'list': [IsAuthenticated]
     }
-
-    def get_company(self):
-        company = get_object_or_404(Company, id=self.kwargs['pk'])
-        self.check_object_permissions(self.request, company)
-        return company
 
     def get_queryset(self):
         return Company.objects.filter(admin=self.request.user) \
@@ -54,7 +47,7 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
 
     @action(detail=False, methods=['get'])
     def workers(self, request, *args, **kwargs):
-        company = self.get_company()
+        company = self.get_object()
         workers = company.workers.all() \
             .prefetch_related(
                 Prefetch(
@@ -71,14 +64,14 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     
     @action(detail=False, methods=['get'])
     def detectors(self, request, *args, **kwargs):
-        company = self.get_company()
+        company = self.get_object()
         detectors = company.detectors.all()
         serializer = self.get_serializer(detectors, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'])
     def detectors_to_transfer(self, request, *args, **kwargs):
-        company = self.get_company()
+        company = self.get_object()
         detectors = company.detectors.filter(user=None)
         serializer = self.get_serializer(detectors, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -87,7 +80,7 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     def add_detectors(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        company = self.get_company()
+        company = self.get_object()
         worker = company.get_worker(serializer.data['id'])
         detectors = company.no_user_detectors().filter(id__in=serializer.data['detectors'])
         detectors.update(user=worker)
@@ -97,7 +90,7 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     def remove_detectors(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        company = self.get_company()
+        company = self.get_object()
         detectors = company.detectors.filter(id__in=serializer.data['detectors'])
         detectors.update(user=None)
         return Response(status=status.HTTP_200_OK)

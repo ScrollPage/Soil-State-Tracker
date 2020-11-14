@@ -77,7 +77,7 @@ class TestViews(APITestCase):
 
     def test_workers_list_by_random(self):
         response = get_response('workers-list', 'get', self.user2, kwargs={'pk': 1})
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_add_detectors_by_admin(self):
         response = get_response('add-detectors', 'post', self.user1, {'detectors': [2], 'id': 2}, {'pk': 1})
@@ -89,7 +89,7 @@ class TestViews(APITestCase):
 
     def test_remove_detectors_by_random(self):
         response = get_response('remove-detectors', 'post', self.user2, {'detectors': [1]}, {'pk': 1})
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_remove_detectors_by_admin_bad_request(self):
         response = get_response('remove-detectors', 'post', self.user1, kwargs={'pk': 1})
