@@ -2,10 +2,10 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.urlpatterns import format_suffix_patterns
 from django.urls import path
 
-from .views import ChatViewSet
+from .views import ChatViewSet, ChatNotificationsListView
 
 urlpatterns = [
-    
+    path('notifications/', ChatNotificationsListView.as_view(), name='notifications')
 ]
 
 accept_manager = ChatViewSet.as_view({

@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
 
-class IsRightUser(BasePermission):
-    '''Тот ли пользователь'''
-    def has_object_permissionZ(self, request, view, obj):
-        return obj.user == request.user
+class DetectorOwner(BasePermission):
+    '''Владеет ли он датчиком'''
+    def has_object_permission(self, request, view, obj):
+        return obj in request.user.my_detectors.all()

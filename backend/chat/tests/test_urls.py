@@ -3,12 +3,17 @@ from django.urls import reverse, resolve
 
 class TestUrls(TestCase):
 
-    def test_email_activation_url(self):
+    def test_chat_list_url(self):
         '''Убедиться, что ссылка и вью связаны правильно'''
         path = reverse('chat-list')
         self.assertEqual(resolve(path).view_name, 'chat-list')
 
-    def test_activity_url(self):
+    def test_accept_manager_url(self):
         '''Убедиться, что ссылка и вью связаны правильно'''
         path = reverse('accept-manager', kwargs={'pk': 1})
         self.assertEqual(resolve(path).view_name, 'accept-manager')
+
+    def test_notifications_url(self):
+        '''Убедиться, что ссылка и вью связаны правильно'''
+        path = reverse('notifications')
+        self.assertEqual(resolve(path).view_name, 'notifications')

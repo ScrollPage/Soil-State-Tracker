@@ -60,4 +60,20 @@ class TestViews(APITestCase):
         response = get_response('accept-manager', 'post', self.user3, kwargs={'pk': 2})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_notifications_unauth(self):
+        response = get_response('notifications', 'get')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_notifications_common_user(self):
+        response = get_response('notifications', 'get', self.user2)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_notifications_staff(self):
+        response = get_response('notifications', 'get', self.user1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]['chat'], 1)
+
+
+
     

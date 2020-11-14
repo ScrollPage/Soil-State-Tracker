@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'corsheaders',
     'channels',
+    'django_filters',
     'djoser',
     'drf_yasg',
     'rest_auth',
@@ -221,3 +222,14 @@ DJOSER = {
         'current_user': 'client.api.serializers.ClientMeSerialzier',
     },
 }
+
+# Pusher
+import pusher
+
+pusher_client = pusher.Pusher(
+    app_id='1107234',
+    key='cd195d4bd07dc0db154b',
+    secret='0f6da17343f42481b9d3',
+    cluster='eu',
+    ssl=True
+)
