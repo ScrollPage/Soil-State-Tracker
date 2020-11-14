@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'cacheops',
     'corsheaders',
     'channels',
     'django_filters',
@@ -233,3 +234,19 @@ pusher_client = pusher.Pusher(
     cluster='eu',
     ssl=True
 )
+
+# Cacheops
+CACHEOPS_REDIS = {
+    'host': '192.168.99.100', # redis-server is on same machine
+    'port': 6379,        # default redis port
+    'db': 1,             # SELECT non-default redis database
+}
+
+CACHEOPS_DEFAULTS = {
+    'timeout': 60*60
+}
+
+CACHEOPS = {
+    'company.company': {'ops': 'all'},
+    'detector.detector': {'ops': 'all'}
+}
