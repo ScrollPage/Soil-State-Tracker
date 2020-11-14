@@ -59,11 +59,8 @@ class Client(AbstractBaseUser, PermissionsMixin):
     objects = ClientManager()
 
     def __str__(self):
-        return str(self.id)
-
-    def get_full_name(self):
-        return f'{self.first_name} {self.last_name}'
-
+        return f'{self.last_name} {self.first_name}'
+        
     class Meta:
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'

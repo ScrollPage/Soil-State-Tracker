@@ -41,7 +41,6 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
         'list': [IsAuthenticated]
     }
 
-
     def get_queryset(self):
         queryset = Company.objects.filter(admin=self.request.user)
 
