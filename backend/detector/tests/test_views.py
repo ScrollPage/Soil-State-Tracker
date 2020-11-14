@@ -64,4 +64,4 @@ class TestViews(APITestCase):
 		response = get_response('detector-data-list', 'get', self.user1, kwargs={'pk': 1})
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertEqual(len(response.data), 1)
-		self.assertEqual(response.data[0]['pH'], 10.00)
+		self.assertEqual(float(response.data[0]['pH']), 10.0)

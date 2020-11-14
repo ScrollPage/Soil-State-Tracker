@@ -8,7 +8,7 @@ from django.db.models import Q, Count, Prefetch
 
 from company.models import Company
 from detector.models import Detector
-from .service import PermissionSerializerModelViewSet, get_company_or_404
+from .service import PermissionSerializerModelViewSet
 from .serializers import (
     CompanySerializer, 
     CompanyUpdateSerializer,
@@ -35,23 +35,26 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     permission_classes = [IsAuthenticated, IsAdmin]
     permission_classes_by_action = {
         'create': [IsAuthenticated],
-        'retirieve': [IsAuthenticated],
+        'retrieve': [IsAuthenticated],
         'list': [IsAuthenticated]
     }
+
+    def get_company(self):
+        company = get_object_or_404(Company, id=self.kwargs['pk'])
+        self.check_object_permissions(self.request, company)
+        return company
 
     def get_queryset(self):
         return Company.objects.filter(admin=self.request.user) \
             .select_related('admin') \
             .annotate(is_admin=Count('admin', filter=Q(admin__id=self.request.user.id)))
-            
 
     def perform_create(self, serializer):
         serializer.save(admin=self.request.user)
 
     @action(detail=False, methods=['get'])
     def workers(self, request, *args, **kwargs):
-        pk = kwargs['pk']
-        company = get_company_or_404(self.get_queryset(), pk)
+        company = self.get_company()
         workers = company.workers.all() \
             .prefetch_related(
                 Prefetch(
@@ -68,16 +71,14 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     
     @action(detail=False, methods=['get'])
     def detectors(self, request, *args, **kwargs):
-        pk = kwargs['pk']
-        company = get_company_or_404(self.get_queryset(), pk)
+        company = self.get_company()
         detectors = company.detectors.all()
         serializer = self.get_serializer(detectors, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'])
     def detectors_to_transfer(self, request, *args, **kwargs):
-        pk = kwargs['pk']
-        company = get_company_or_404(self.get_queryset(), pk)
+        company = self.get_company()
         detectors = company.detectors.filter(user=None)
         serializer = self.get_serializer(detectors, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -86,8 +87,7 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     def add_detectors(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        pk = kwargs['pk']
-        company = get_company_or_404(self.get_queryset(), pk)
+        company = self.get_company()
         worker = company.get_worker(serializer.data['id'])
         detectors = company.no_user_detectors().filter(id__in=serializer.data['detectors'])
         detectors.update(user=worker)
@@ -97,8 +97,7 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     def remove_detectors(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        pk = kwargs['pk']
-        company = get_company_or_404(self.get_queryset(), pk)
+        company = self.get_company()
         detectors = company.detectors.filter(id__in=serializer.data['detectors'])
         detectors.update(user=None)
         return Response(status=status.HTTP_200_OK)
