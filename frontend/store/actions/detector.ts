@@ -14,9 +14,8 @@ export const addDetector = (companyId: number, workerId: number, transferDetecto
 
   const token = Cookie.get('token');
   await instance(token)
-    .post(`${beginUrl}/detectors/add/`, {
-      detectors: transferDetectors.map(detector => detector.id),
-      id: workerId
+    .post(`${beginUrl}/detectors/remove/`, {
+      detectors: transferDetectors.map(detector => detector.id)
     })
     .then(() => {
       trigger(triggerUrl);
@@ -38,8 +37,9 @@ export const removeDetector = (companyId: number, workerId: number, transferDete
 
   const token = Cookie.get('token');
   await instance(token)
-    .post(`${beginUrl}/detectors/remove/`, {
-      detectors: transferDetectors.map(detector => detector.id)
+    .post(`${beginUrl}/detectors/add/`, {
+      detectors: transferDetectors.map(detector => detector.id),
+      id: workerId
     })
     .then(() => {
       trigger(triggerUrl);

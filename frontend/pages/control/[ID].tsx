@@ -1,5 +1,5 @@
 import { instanceWithSSR } from "@/api";
-import Control from "@/components/Control/indext";
+import Control from "@/components/Control";
 import { ICompany } from "@/types/company";
 import { IDetector } from "@/types/detector";
 import { IWorker } from "@/types/user";

@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 interface IAccountActivation {
-  token?: string;
+  token: string | null;
 }
 
 const AccountActivation = ({ token }: IAccountActivation) => {

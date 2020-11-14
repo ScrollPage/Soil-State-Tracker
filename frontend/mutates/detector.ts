@@ -13,7 +13,6 @@ export const addDetectorMutate = (triggerUrl: string, triggerWorkerUrl: string, 
   }, false);
 
   mutate(triggerWorkerUrl, async (workers: IWorker[]) => {
-    console.log(workers)
     if (workers) {
       const index = workers.findIndex(worker => worker.id === workerId);
       const newWorkerDetectors = workers[index].my_detectors.filter(detector => !!!transferDetectors.find(transferDetector => transferDetector.id === detector.id))
@@ -33,7 +32,6 @@ export const removeDetectorMutate = (triggerUrl: string, triggerWorkerUrl: strin
   }, false);
 
   mutate(triggerWorkerUrl, async (workers: IWorker[]) => {
-    console.log(workers)
     if (workers) {
       const index = workers.findIndex(worker => worker.id === workerId);
       const newWorkerDetectors = workers[index].my_detectors;
