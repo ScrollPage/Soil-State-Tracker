@@ -1,25 +1,32 @@
+import Chat from "@/components/Chat";
+import { getAsString } from "@/utils.ts";
 import { ensureAuth } from "@/utils.ts/ensure";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import styled from "styled-components";
 
-interface ISupport {}
+interface ISupport {
+  chatId: string | null;
+}
 
-export default function Support({}: ISupport) {
+export default function Support({ chatId }: ISupport) {
   return (
     <SSupport>
       <Head>
         <title>Поддержка</title>
       </Head>
-      <h1>Поддержка</h1>
+      <Chat chatId={chatId} />
     </SSupport>
   );
 }
 
 export const getServerSideProps: GetServerSideProps<ISupport> = async (ctx) => {
   ensureAuth(ctx);
+  const chatId = getAsString(ctx?.query?.id);
   return {
-    props: {},
+    props: {
+      chatId: chatId || null,
+    },
   };
 };
 

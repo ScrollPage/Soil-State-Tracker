@@ -6,6 +6,7 @@ import { SPrivateLayout, SMain } from "./styles";
 import gsap from "gsap";
 import { useDispatch } from "react-redux";
 import { authCheckState } from "@/store/actions/auth";
+import ChatWidget from "@/components/ChatWidget";
 
 interface IPrivateLayout {
   children: React.ReactNode;
@@ -48,6 +49,7 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children, isAuth }) => {
         </SMain>
       </SPrivateLayout>
       <Drower isAuth={isAuth} setMenuOpen={setMenuOpen} menuOpen={menuOpen} />
+      <ChatWidget />
     </>
   );
 };
