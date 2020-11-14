@@ -45,7 +45,8 @@ const MyApp = ({ Component, pageProps, isAuth }: IMyApp) => {
         <GlobalStyle />
         <SWRConfig
           value={{
-            revalidateOnMount: true,
+            revalidateOnMount: false,
+            revalidateOnFocus: false,
             dedupingInterval: 1000,
             fetcher: (url) =>
               axios({
@@ -92,8 +93,9 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
   }
   #__next {
-    height: 100% !important; 
+    height: 100% !important;
     width: 100%;
+    position: relative;
   }
   p {
     margin: 0;

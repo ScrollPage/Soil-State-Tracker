@@ -50,10 +50,9 @@ class WebSocketService {
         }
     }
 
-    fetchMessages(userId, chatId) {
+    fetchMessages(chatId) {
         this.sendMessage({
             command: 'fetch_messages',
-            id: userId,
             chatId,
         });
     }
@@ -61,25 +60,9 @@ class WebSocketService {
     newChatMessage(message) {
         this.sendMessage({
             command: 'new_message',
-            from: message.from,
-            message: message.content,
             chatId: message.chatId,
-        });
-    }
-
-    joinChat(userId, chatId) {
-        this.sendMessage({
-            command: 'join',
-            id: userId,
-            chatId,
-        });
-    }
-
-    leaveChat(userId, chatId) {
-        this.sendMessage({
-            command: 'leave',
-            id: userId,
-            chatId,
+            content: message.content,
+            full_name: message.fullName
         });
     }
 

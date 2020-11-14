@@ -19,3 +19,15 @@ export const getModalName = (state: AppStateType) => {
 export const getModalProps = (state: AppStateType) => {
   return state.modal.modalProps
 }
+
+export const getMessages = (state: AppStateType) => {
+  return state.message.messages
+}
+
+export const getMessagesLoading = (state: AppStateType) => {
+  return state.message.loading
+}
+
+export const getChatId = (state: AppStateType) => {
+  return state.chat.chatId
+}

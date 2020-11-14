@@ -1,6 +1,6 @@
 import { PropertiesType } from '@/types/action';
 import { IMessages } from '@/types/message';
-import { message } from './../actions/message';
+import { messageActions } from './../actions/message';
 
 const initialState = {
   messages: [] as IMessages,
@@ -9,7 +9,7 @@ const initialState = {
 
 type InititalStateType = typeof initialState;
 
-type MessageActionTypes = ReturnType<PropertiesType<typeof message>>
+type MessageActionTypes = ReturnType<PropertiesType<typeof messageActions>>
 
 export const messageReducer = (state = initialState, action: MessageActionTypes): InititalStateType => {
   switch (action.type) {

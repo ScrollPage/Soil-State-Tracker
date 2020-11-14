@@ -26,7 +26,7 @@ export const authSignup = (
       setStep(e => e + 1);
     })
     .catch(err => {
-      dispatch(show('Ошибка в создании аккаунта!', 'warning'));
+      dispatch(show('Пользователь с такими данными уже существует!', 'warning'));
     });
 };
 
@@ -64,7 +64,7 @@ export const authLogin = (email: string, password: string, isRouterPush: boolean
       }
     })
     .catch(err => {
-      dispatch(show('Ошибка входа, возможно у вас неверный логин или пароль!', 'warning'));
+      dispatch(show('Неверный логин или пароль, перепроверьте данные!', 'warning'));
     });
 };
 

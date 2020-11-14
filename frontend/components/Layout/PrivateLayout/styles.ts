@@ -8,6 +8,7 @@ export const SPrivateLayout = styled.div`
 
 export const SMain = styled.div`
   padding-top: 60px;
+  height: 100%;
   /* background-color: #EEF2F7; */
 `;
 
