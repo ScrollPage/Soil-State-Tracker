@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'cacheops',
     'corsheaders',
     'channels',
-    'django_filters',
     'djoser',
     'drf_yasg',
     'rest_auth',
@@ -131,9 +130,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # REST FRAMEWORK
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    # ),
     'EXCEPTION_HANDLER': 'backend.service.exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',

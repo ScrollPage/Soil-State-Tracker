@@ -70,6 +70,7 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
                         )
                     )
                 )
+                
         serializer = self.get_serializer(_get_workers(), many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     

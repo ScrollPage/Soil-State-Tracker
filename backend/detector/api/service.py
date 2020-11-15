@@ -1,7 +1,7 @@
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework import mixins
 
-from django_filters import rest_framework as filters
+from url_filter.filtersets import ModelFilterSet
 
 from backend.service import PermissionMixin
 from detector.models import DetectorData
@@ -17,10 +17,8 @@ class PermissionSerializerDetectorViewSet(PermissionMixin,
     '''
     pass
 
-class DetectorDataDateFilter(filters.FilterSet):
-	'''Фильтрация данных с датчиков по дате'''
-	timestamp = filters.DateRangeFilter()
-
+class DetectorDataFilterSet(ModelFilterSet):
+	'''Фильтрация данных с датчиков'''
 	class Meta:
 		model = DetectorData
 		fields = ['timestamp']

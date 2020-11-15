@@ -14,5 +14,5 @@ class DetectorDataSerializer(serializers.ModelSerializer) :
     
     class Meta:
         model = DetectorData
-        exclude = ['detector']
+        exclude = ['detector', 'company', 'user']
 

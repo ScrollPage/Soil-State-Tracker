@@ -2,13 +2,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-
-from django_filters.rest_framework import DjangoFilterBackend
+from django.http import QueryDict
 
 from detector.models import Detector, DetectorData
-from .service import PermissionSerializerDetectorViewSet, DetectorDataDateFilter
+from .service import PermissionSerializerDetectorViewSet, DetectorDataFilterSet
 from .serializers import DetectorSerializer, DetectorDataSerializer
-from .permissions import DetectorOwner
 
 class DetectorViewSet(PermissionSerializerDetectorViewSet):
     '''Список датчиков и отдельный датчик'''
@@ -24,19 +22,27 @@ class DetectorViewSet(PermissionSerializerDetectorViewSet):
 
 class DetectorDataView(generics.ListAPIView):
     '''Список данных датчиков'''
-    queryset = DetectorData.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = DetectorDataDateFilter
     serializer_class = DetectorDataSerializer
-    permission_classes = [permissions.IsAuthenticated, DetectorOwner]
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        return DetectorData.objects.filter(user=self.request.user)
 
     def get_detector(self):
         detector = get_object_or_404(Detector, id=self.kwargs['pk'])
         self.check_object_permissions(self.request, detector)
         return detector
 
+    def get_query_params(self):
+        res = ''
+        for k, v in self.request.query_params.items():
+            res += f'{k}={v}&'
+        return QueryDict(res)
+
     def list(self, request, *args, **kwargs):
         detector = self.get_detector()
-        data = DetectorData.objects.filter(detector=detector)
+        query = self.get_query_params()
+        data = self.get_queryset().filter(detector=detector)
+        data = DetectorDataFilterSet(data=query, queryset=data).filter()
         serializer = self.get_serializer(data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -42,7 +42,20 @@ class DetectorData(models.Model):
     humidity = models.DecimalField('Влажность', max_digits=4, decimal_places=2)
     lightning = models.DecimalField('Освещенность', max_digits=4, decimal_places=2)
     pH = models.DecimalField('Кислотность', max_digits=4, decimal_places=2)
-    timestamp = models.DateTimeField('Время сбора данных', auto_now_add=True)
+    timestamp = models.DateField('Дата сбора данных', auto_now_add=True)
+    company = models.ForeignKey(
+        Company, 
+        verbose_name='Компания-владелец',
+        on_delete=models.CASCADE, 
+        related_name='detectors_data'
+    )
+    user = models.ForeignKey(
+        Client, 
+        verbose_name='Подчиненный-владелец', 
+        null=True,
+        on_delete=models.SET_NULL, 
+        related_name='my_detectors_data'
+    )
 
     def __str__(self):
         return f'report at {self.timestamp} from {self.detector}'
