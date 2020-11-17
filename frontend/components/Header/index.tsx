@@ -8,15 +8,18 @@ import Logo from "../UI/Logo";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { logout } from "@/store/actions/auth";
+import { IProtection } from "@/types/protection";
 
 interface IHeader {
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
-  isAuth: boolean;
+  protection: IProtection;
 }
 
-const Header = ({ setMenuOpen, isAuth }: IHeader) => {
+const Header = ({ setMenuOpen, protection }: IHeader) => {
   const { push } = useRouter();
   const dispatch = useDispatch();
+
+  const { isAuth } = protection;
 
   const goToRegisterHandler = () => {
     push({ pathname: "/register" }, undefined, {
@@ -36,7 +39,7 @@ const Header = ({ setMenuOpen, isAuth }: IHeader) => {
             <Logo />
           </SItem>
           <SItem>
-            <HeaderMenu isAuth={isAuth} />
+            <HeaderMenu protection={protection} />
           </SItem>
           <SItem>
             {!isAuth ? (
@@ -64,6 +67,8 @@ const Header = ({ setMenuOpen, isAuth }: IHeader) => {
             <SItemBtn>
               <SButton
                 shape="circle"
+                height={"30px"}
+                width={"30px"}
                 onClick={() => setMenuOpen((state) => !state)}
               >
                 <MenuOutlined />

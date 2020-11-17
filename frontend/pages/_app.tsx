@@ -16,6 +16,7 @@ import Alert from "@/components/UI/Alert";
 import App, { AppContext, AppProps } from "next/app";
 import cookies from "next-cookies";
 import RootModal from "@/components/Modal";
+import { IProtection } from "@/types/protection";
 
 NProgress.configure({
   showSpinner: false,
@@ -27,10 +28,10 @@ Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
 interface IMyApp extends AppProps {
-  isAuth: boolean;
+  protection: IProtection;
 }
 
-const MyApp = ({ Component, pageProps, isAuth }: IMyApp) => {
+const MyApp = ({ Component, pageProps, protection }: IMyApp) => {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: stylesheet }} />
@@ -51,7 +52,7 @@ const MyApp = ({ Component, pageProps, isAuth }: IMyApp) => {
             fetcher: (url) =>
               axios({
                 url: url,
-                baseURL: "http://localhost:8000",
+                baseURL: process.env.DB_HOST,
                 headers: {
                   "Content-Type": "application/json",
                   Authorization: `Token ${Cookie.get("token")}`,
@@ -62,7 +63,7 @@ const MyApp = ({ Component, pageProps, isAuth }: IMyApp) => {
           <Provider store={store}>
             <Alert />
             <RootModal />
-            <PrivateLayout isAuth={isAuth}>
+            <PrivateLayout protection={protection}>
               <Component {...pageProps} />
             </PrivateLayout>
           </Provider>
@@ -77,9 +78,20 @@ MyApp.getInitialProps = async (AppContext: AppContext) => {
   const appProps = Component.getInitialProps
     ? await App.getInitialProps(AppContext)
     : {};
-  const token = cookies(ctx)?.token;
-  const isAuth = token ? true : false;
-  return { ...appProps, isAuth };
+  const isAuth = cookies(ctx)?.token ? true : false;
+  const isStaff = cookies(ctx)?.isStaff ? true : false;
+  const isWorker = cookies(ctx)?.isWorker ? true : false;
+
+  const protection: IProtection = {
+    isAuth,
+    isStaff,
+    isWorker,
+  };
+
+  return {
+    ...appProps,
+    protection,
+  };
 };
 
 const makestore = () => store;

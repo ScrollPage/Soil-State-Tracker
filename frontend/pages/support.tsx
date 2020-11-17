@@ -1,5 +1,5 @@
 import Chat from "@/components/Chat";
-import { getAsString } from "@/utils.ts";
+import { getAsString } from "@/utils.ts/getAsString";
 import { ensureAuth } from "@/utils.ts/ensure";
 import { GetServerSideProps } from "next";
 import Head from "next/head";

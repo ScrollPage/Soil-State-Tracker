@@ -7,13 +7,17 @@ import gsap from "gsap";
 import { useDispatch } from "react-redux";
 import { authCheckState } from "@/store/actions/auth";
 import ChatWidget from "@/components/ChatWidget";
+import { messageActions, setMessages } from "@/store/actions/message";
+import { IMessage, IMessages } from "@/types/message";
+import WebSocketInstance from "@/websocket";
+import { IProtection } from "@/types/protection";
 
 interface IPrivateLayout {
   children: React.ReactNode;
-  isAuth: boolean;
+  protection: IProtection;
 }
 
-const PrivateLayout: React.FC<IPrivateLayout> = ({ children, isAuth }) => {
+const PrivateLayout: React.FC<IPrivateLayout> = ({ children, protection }) => {
   const dispatch = useDispatch();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -38,17 +42,30 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children, isAuth }) => {
 
   useEffect(() => {
     dispatch(authCheckState());
+    WebSocketInstance.addCallbacks(setMessagesHandler, addMessageHandler);
   }, []);
+
+  const setMessagesHandler = (messages: IMessages) => {
+    dispatch(setMessages(messages));
+  };
+
+  const addMessageHandler = (message: IMessage) => {
+    dispatch(messageActions.addMessage(message));
+  };
 
   return (
     <>
       <SPrivateLayout ref={layout}>
-        <Header isAuth={isAuth} setMenuOpen={setMenuOpen} />
+        <Header protection={protection} setMenuOpen={setMenuOpen} />
         <SMain>
           <Container>{children}</Container>
         </SMain>
       </SPrivateLayout>
-      <Drower isAuth={isAuth} setMenuOpen={setMenuOpen} menuOpen={menuOpen} />
+      <Drower
+        protection={protection}
+        setMenuOpen={setMenuOpen}
+        menuOpen={menuOpen}
+      />
       <ChatWidget />
     </>
   );

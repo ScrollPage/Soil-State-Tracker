@@ -1,10 +1,10 @@
 import Cookie from 'js-cookie';
 import { show } from '@/store/actions/alert';
-import { instance } from '@/api';
+import { instance, instanceWithOutHeaders } from '@/api';
 import { ThunkType } from '@/types/thunk';
 
 export const chatActions = {
-  setChatId: (chatId: number) => ({ type: 'SET_CHAT_ID', chatId } as const)
+  setChat: (chatId: number, manager: string) => ({ type: 'SET_CHAT_ID', chatId, manager } as const)
 }
 
 interface ICreateChatRes {
@@ -15,11 +15,12 @@ interface ICreateChatRes {
 
 export const createChat = (): ThunkType => async dispatch => {
   const token = Cookie.get('token');
-  await instance(token)
+  const thisInstance = token ? instance(token) : instanceWithOutHeaders;
+  await thisInstance
     .post('/api/chat/', {})
     .then(res => {
       const data: ICreateChatRes = res.data;
-      dispatch(chatActions.setChatId(data.id));
+      dispatch(chatActions.setChat(data.id, data.manager));
       dispatch(show('Вы успешно создали чат!', 'success'));
     })
     .catch(err => {
