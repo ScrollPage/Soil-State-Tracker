@@ -119,7 +119,7 @@ const Chat: React.FC<IChatProps> = ({ chatId }) => {
           <>
             <ChatInfo name={getChatNameById(Number(chatId))} />
             <ChatInner />
-            <ChatInput />
+            {/* <ChatInput /> */}
           </>
         )}
       </SChatRight>

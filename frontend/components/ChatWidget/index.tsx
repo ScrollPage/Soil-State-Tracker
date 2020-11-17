@@ -116,7 +116,7 @@ const ChatWidget = () => {
             <span>Операторы онлайн</span>
           </SChatWidgetTop>
           <SChatWidgetInner>{renderChatMessages(data)}</SChatWidgetInner>
-          <ChatInput />
+          {/* <ChatInput /> */}
         </SChatWidget>
       ) : (
         <SChatWidgetBtn onClick={() => setIsOpen(true)}>

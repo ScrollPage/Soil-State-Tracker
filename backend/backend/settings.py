@@ -244,5 +244,6 @@ CACHEOPS_DEFAULTS = {
 
 CACHEOPS = {
     'company.company': {'ops': 'all'},
-    'detector.detector': {'ops': 'all'}
+    'detector.detector': {'ops': 'all'},
+    'client.client': {'ops': 'all'}
 }
