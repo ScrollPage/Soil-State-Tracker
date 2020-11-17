@@ -3,7 +3,7 @@ import Control from "@/components/Control";
 import { ICompany } from "@/types/company";
 import { IDetector } from "@/types/detector";
 import { IWorker } from "@/types/user";
-import { getAsString } from "@/utils.ts";
+import { getAsString } from "@/utils.ts/getAsString";
 import { ensureAuth } from "@/utils.ts/ensure";
 import { GetServerSideProps } from "next";
 import React from "react";

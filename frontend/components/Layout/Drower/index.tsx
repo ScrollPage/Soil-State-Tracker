@@ -17,18 +17,21 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { logout } from "@/store/actions/auth";
 import { SItemBtn, SItemLink } from "@/components/Header/styles";
+import { IProtection } from "@/types/protection";
 
 interface IDrower {
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
   menuOpen: boolean;
-  isAuth: boolean;
+  protection: IProtection;
 }
 
-const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen, isAuth }) => {
+const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen, protection }) => {
   let drower = useRef(null);
 
   const { push } = useRouter();
   const dispatch = useDispatch();
+
+  const { isAuth } = protection;
 
   useEffect(() => {
     if (menuOpen) {
@@ -66,7 +69,12 @@ const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen, isAuth }) => {
     <SDrower ref={drower}>
       <SDrowerInner>
         <SDrowerClose>
-          <SButton shape="circle" onClick={() => setMenuOpen(false)}>
+          <SButton
+            shape="circle"
+            height={"30px"}
+            width={"30px"}
+            onClick={() => setMenuOpen(false)}
+          >
             <CloseOutlined />
           </SButton>
         </SDrowerClose>
@@ -74,7 +82,9 @@ const Drower: React.FC<IDrower> = ({ setMenuOpen, menuOpen, isAuth }) => {
           <Logo />
         </SDrowerItem>
         <SDrowerItem>
-          <SDrowerPages>{renderLinks(isAuth, true, setMenuOpen)}</SDrowerPages>
+          <SDrowerPages>
+            {renderLinks(protection, true, setMenuOpen)}
+          </SDrowerPages>
           <SDrowerAuth>
             {!isAuth ? (
               <>

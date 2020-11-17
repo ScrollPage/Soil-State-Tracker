@@ -57,6 +57,7 @@ export const authLogin = (email: string, password: string, isRouterPush: boolean
 
       dispatch(checkAuthTimeout(24 * 3600 * 1000));
       if (isRouterPush) {
+        console.log('asdasd')
         dispatch(authInfo(true));
         dispatch(show('Вы успешно вошли!', 'success'));
       } else {
@@ -77,6 +78,8 @@ export const authInfo = (isRouterPush: boolean): ThunkType => async dispatch => 
       Cookie.set('lastName', res.data.last_name);
       Cookie.set('userId', res.data.id);
       Cookie.set('email', res.data.email);
+      Cookie.set('isStaff', res.data.is_staff);
+      Cookie.set('isWorker', res.data.is_worker);
 
       if (isRouterPush) {
         Router.push({ pathname: '/data' }, undefined, { shallow: true });
@@ -91,15 +94,18 @@ export const authInfo = (isRouterPush: boolean): ThunkType => async dispatch => 
 
 export const logout = () => (dispatch: any) => {
   Router.push({ pathname: '/' }, undefined, { shallow: true });
-  // if (Router.query.chatID !== undefined) {
-  //     WebSocketInstance.disconnect();
-  // }
   Cookie.remove('token');
   Cookie.remove('expirationDate');
   Cookie.remove('firstName');
   Cookie.remove('lastName');
   Cookie.remove('userId');
   Cookie.remove('email');
+  Cookie.remove('password');
+  Cookie.remove('isStaff');
+  Cookie.remove('isWorker');
+
+  Cookie.remove('chatId');
+  Cookie.remove('manager');
   dispatch(show('Вы успешно вышли!', 'success'));
 };
 

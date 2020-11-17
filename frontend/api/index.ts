@@ -4,13 +4,13 @@ import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
 
 export const instanceWithOutHeaders = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: process.env.DB_HOST,
   headers: undefined
 })
 
 export const instance = (token: string | undefined) => {
   return axios.create({
-    baseURL: 'http://localhost:8000',
+    baseURL: process.env.DB_HOST,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Token ${token}`
@@ -21,7 +21,7 @@ export const instance = (token: string | undefined) => {
 export const instanceWithSSR = (ctx: GetServerSidePropsContext<ParsedUrlQuery>) => {
   const token = cookies(ctx)?.token || "";
   return axios.create({
-    baseURL: 'http://localhost:8000',
+    baseURL: process.env.DB_HOST,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Token ${token}`

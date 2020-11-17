@@ -1,5 +1,5 @@
 import { emailActivate } from "@/store/actions/auth";
-import { getAsString } from "@/utils.ts";
+import { getAsString } from "@/utils.ts/getAsString";
 import { ensureRedirectToData } from "@/utils.ts/ensure";
 import { CheckOutlined } from "@ant-design/icons";
 import { GetServerSideProps } from "next";

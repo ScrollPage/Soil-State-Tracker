@@ -1,3 +1,4 @@
+import { IProtection } from "@/types/protection";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { SetStateAction } from "react";
@@ -7,34 +8,73 @@ import { SHeaderMenu, SNavLink } from "./styles";
 interface INavitem {
   path: string;
   name: string;
-  isPrivate: boolean;
+  isAuth: boolean;
+  isStaff: boolean;
+  isWorker: boolean;
 }
 
 const navItems: INavitem[] = [
-  { isPrivate: false, path: "/", name: "Главная" },
-  { isPrivate: false, path: "/about", name: "О продукте" },
-
-  { isPrivate: true, path: "/", name: "Главная" },
-  { isPrivate: true, path: "/about", name: "О продукте" },
-  { isPrivate: true, path: "/data", name: "Данные" },
-  { isPrivate: true, path: "/manage", name: "Управление" },
-  { isPrivate: true, path: "/support", name: "Поддержка" },
+  {
+    isAuth: false,
+    isStaff: false,
+    isWorker: false,
+    path: "/",
+    name: "Главная",
+  },
+  {
+    isAuth: false,
+    isStaff: false,
+    isWorker: false,
+    path: "/about",
+    name: "О продукте",
+  },
+  {
+    isAuth: true,
+    isStaff: false,
+    isWorker: true,
+    path: "/data",
+    name: "Данные",
+  },
+  {
+    isAuth: true,
+    isStaff: false,
+    isWorker: false,
+    path: "/manage",
+    name: "Управление",
+  },
+  {
+    isAuth: true,
+    isStaff: true,
+    isWorker: false,
+    path: "/support",
+    name: "Поддержка",
+  },
 ];
 
 export const renderLinks = (
-  isAuth: boolean,
+  protection: IProtection,
   isDrower?: boolean,
   setMenuOpen?: Dispatch<SetStateAction<boolean>>
 ) => {
   const router = useRouter();
+  const { isAuth, isStaff, isWorker } = protection;
 
   const menuOpenHadler = () => {
     if (isDrower && setMenuOpen) {
       setMenuOpen(false);
     }
   };
+
+  const filterLinks = (item: INavitem) => {
+    let isShow =
+      (isAuth ? true : !item.isAuth) &&
+      (isStaff ? true : !item.isStaff) &&
+      (isWorker ? true : !item.isWorker);
+    return isShow;
+  };
+
   return navItems
-    .filter((item) => item.isPrivate === isAuth)
+    .filter((item) => filterLinks(item))
     .map((item, index) => (
       <Link key={`navlink__key__${item.path}__${index}`} href={item.path}>
         <SNavLink
@@ -49,11 +89,11 @@ export const renderLinks = (
 };
 
 interface IHeaderMenu {
-  isAuth: boolean;
+  protection: IProtection;
 }
 
-const HeaderMenu = ({ isAuth }: IHeaderMenu) => {
-  return <SHeaderMenu>{renderLinks(isAuth, false)}</SHeaderMenu>;
+const HeaderMenu = ({ protection }: IHeaderMenu) => {
+  return <SHeaderMenu>{renderLinks(protection, false)}</SHeaderMenu>;
 };
 
 export default HeaderMenu;
