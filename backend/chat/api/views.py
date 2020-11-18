@@ -34,7 +34,6 @@ class ChatViewSet(PermissionSerializerListCreateViewSet):
     @action(detail=False, methods=['post'])
     def accept_manager(self, request, *args, **kwargs):
         chat = self.get_object()
-        NewChatNotification.objects.get(chat=chat).delete()
         chat.manager = request.user
         chat.save()
         return Response(status=status.HTTP_200_OK)
