@@ -27,7 +27,3 @@ export const getMessages = (state: AppStateType) => {
 export const getMessagesLoading = (state: AppStateType) => {
   return state.message.loading
 }
-
-export const getChatId = (state: AppStateType) => {
-  return state.chat.chatId
-}

@@ -1,7 +1,6 @@
 import { getMessages, getMessagesLoading } from "@/store/selectors";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { useRef } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ChatInfo from "./ChatInfo";
 import ChatInner from "./ChatInner";
@@ -10,116 +9,100 @@ import { SChat, SChatLeft, SChatRight } from "./styles";
 import { messageActions } from "@/store/actions/message";
 import WebSocketInstance from "@/websocket";
 import ChatList from "./ChatList";
-import { IChat } from "@/types/chat";
-
-const data: IChat[] = [
-  {
-    id: 1,
-    manager: "Володя",
-    user_name: "Алексей Скворцов",
-  },
-  {
-    id: 2,
-    manager: "Володя",
-    user_name: "Михаил Гучигей",
-  },
-  {
-    id: 3,
-    manager: "Володя",
-    user_name: "Дональд Трамп",
-  },
-  {
-    id: 4,
-    manager: "Володя",
-    user_name: "Пидор",
-  },
-];
+import { IChat, INotify } from "@/types/chat";
+import useSWR from "swr";
+import { initialiseChat } from "@/utils.ts/initialiseChat";
+import { useUser } from "@/utils.ts/useUser";
+import { getAsString } from "@/utils.ts/getAsString";
+import { notification } from "antd";
 
 interface IChatProps {
-  chatId: string | null;
+  chats: IChat[] | null;
+  notifications: INotify[] | null;
 }
 
-const Chat: React.FC<IChatProps> = ({ chatId }) => {
+const Chat: React.FC<IChatProps> = ({ chats, notifications }) => {
   const dispatch = useDispatch();
   const messages = useSelector(getMessages);
   const loading = useSelector(getMessagesLoading);
-  const { query } = useRouter();
   const [message, setMessage] = useState("");
-  let messagesEnd = useRef<HTMLDivElement>();
+  const [chatId, setChatId] = useState<string | undefined>(undefined);
+  const { fullName } = useUser();
+  const { query } = useRouter();
 
-  const getChatNameById = (id: number) => {
-    return data.find((item) => item.id === Number(chatId))?.user_name;
+  useEffect(() => {
+    setChatId(getAsString(query.id));
+  }, [query]);
+
+  const getChatNameById = (chats: IChat[], id: string) => {
+    return chats.find((chat: IChat) => chat.id === Number(id))?.user_name;
   };
 
-  // useEffect(() => {
-  //   scrollToBottom();
-  // }, [messages]);
+  const { data: chatsData, error: chatsError } = useSWR("/api/chats/", {
+    initialData: chats,
+  });
 
-  // useEffect(() => {
-  //   dispatch(actionMessage.setLoading());
+  const { data: notifyData, error: notifyError } = useSWR(
+    "/api/notifications/",
+    {
+      initialData: notifications,
+    }
+  );
 
-  //   initialiseChat();
-  //   return () => {
-  //     WebSocketInstance.leaveChat(user.userId, query.chatID);
-  //     WebSocketInstance.disconnect();
-  //   };
-  // }, [query.chatID]);
+  useEffect(() => {
+    if (chatId) {
+      dispatch(messageActions.setLoading());
+      initialiseChat(chatId);
+      return () => {
+        WebSocketInstance.disconnect();
+      };
+    }
+  }, [chatId]);
 
-  // const initialiseChat = (): void => {
-  //   waitForSocketConnection(() => {
-  //     WebSocketInstance.joinChat(user.userId, query.chatID);
-  //     WebSocketInstance.fetchMessages(user.userId, query.chatID);
-  //   });
-  //   WebSocketInstance.connect(query.chatID);
-  // };
+  const messageChangeHandler = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    setMessage(e.target.value);
+  };
 
-  // const waitForSocketConnection = (callback: () => void): void => {
-  //   setTimeout(function () {
-  //     if (WebSocketInstance.state() === 1) {
-  //       console.log("Connection is made");
-  //       callback();
-  //     } else {
-  //       console.log("wait for connection...");
-  //       waitForSocketConnection(callback);
-  //     }
-  //   }, 100);
-  // };
+  const newChatMessageHandler = () => {
+    const messageObject = {
+      chatId: chatId,
+      content: message,
+      fullName: fullName,
+    };
+    WebSocketInstance.newChatMessage(messageObject);
+    setMessage("");
+  };
 
-  // const messageChangeHandler = (
-  //   e: React.ChangeEvent<HTMLInputElement>
-  // ): void => {
-  //   setMessage(e.target.value);
-  // };
-
-  // const sendMessageHandler = (e: React.FormEvent<HTMLFormElement>): void => {
-  //   e.preventDefault();
-  //   if (message.trim() !== "") {
-  //     const messageObject = {
-  //       from: user.userId,
-  //       content: message,
-  //       chatId: query.chatID,
-  //     };
-  //     WebSocketInstance.newChatMessage(messageObject);
-  //     setMessage("");
-  //   }
-  // };
-
-  // const scrollToBottom = () => {
-  //   // @ts-ignore: Unreachable code error
-  //   messagesEnd.scrollIntoViewIfNeeded({ behavior: "smooth" });
-  // };
+  const sendMessageHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (message.trim() !== "") {
+      newChatMessageHandler();
+    }
+  };
 
   return (
     <SChat>
       <SChatLeft>
-        <ChatList data={data} />
+        {chatsData && notifyData ? (
+          <ChatList data={chatsData} notify={notifyData} />
+        ) : chatsError || notifyError ? (
+          <h2>Ошибка в выводе чатов</h2>
+        ) : (
+          <h2>Загрузка...</h2>
+        )}
       </SChatLeft>
       <SChatRight>
-        {chatId && (
+        {chatId && chatsData && (
           <>
-            <ChatInfo name={getChatNameById(Number(chatId))} />
-            <ChatInner />
-            {/* <ChatInput /> */}
+            <ChatInfo name={getChatNameById(chatsData, chatId)} />
+            <ChatInner messages={messages} loading={loading} />
+            <ChatInput
+              sendMessage={sendMessageHandler}
+              messageChange={messageChangeHandler}
+              message={message}
+            />
           </>
         )}
       </SChatRight>

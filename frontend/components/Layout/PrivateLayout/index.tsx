@@ -11,6 +11,8 @@ import { messageActions, setMessages } from "@/store/actions/message";
 import { IMessage, IMessages } from "@/types/message";
 import WebSocketInstance from "@/websocket";
 import { IProtection } from "@/types/protection";
+import Pusher from "pusher-js";
+import { useUser } from "@/utils.ts/useUser";
 
 interface IPrivateLayout {
   children: React.ReactNode;
@@ -23,6 +25,19 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children, protection }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   let layout = useRef<HTMLDivElement>(null);
+
+  const { userId } = useUser();
+
+  useEffect(() => {
+    if (protection.isStaff) {
+      const pusher = new Pusher("cd195d4bd07dc0db154b", {
+        cluster: "eu",
+        // @ts-ignore: Unreachable code error
+        encrypted: true,
+      });
+      const channel = pusher.subscribe(`notifications${userId}`);
+    }
+  }, [userId]);
 
   useEffect(() => {
     if (menuOpen) {
@@ -66,7 +81,7 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children, protection }) => {
         setMenuOpen={setMenuOpen}
         menuOpen={menuOpen}
       />
-      <ChatWidget />
+      {!protection.isStaff && <ChatWidget />}
     </>
   );
 };

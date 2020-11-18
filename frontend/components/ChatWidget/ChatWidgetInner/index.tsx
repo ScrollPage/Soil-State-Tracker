@@ -1,6 +1,5 @@
 import { createChat } from "@/store/actions/chat";
-import { getChatId, getMessages, getMessagesLoading } from "@/store/selectors";
-import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
+import { getMessages, getMessagesLoading } from "@/store/selectors";
 import { IMessage } from "@/types/message";
 import WebSocketInstance from "@/websocket";
 import { CloseOutlined } from "@ant-design/icons";
@@ -10,20 +9,15 @@ import { initialiseChat } from "@/utils.ts/initialiseChat";
 import ChatInput from "@/components/Chat/ChatInput";
 import ChatMessage from "@/components/Chat/ChatMessage";
 import { useUser } from "@/utils.ts/useUser";
-import Cookie from "js-cookie";
 import {
   SChatWidget,
   SChatWidgetTop,
   SChatWidgetMessages,
   SChatWidgetClose,
 } from "./styles";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import Cookie from "js-cookie";
+import { useRef } from "react";
 
 interface IChatWidgetInner {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -32,13 +26,14 @@ interface IChatWidgetInner {
 const ChatWidgetInner: React.FC<IChatWidgetInner> = ({ setIsOpen }) => {
   const dispatch = useDispatch();
 
-  const chatId = useSelector(getChatId);
+  // const chatId = useSelector(getChatId);
+  let messagesEnd = useRef<HTMLDivElement>();
   const messages = useSelector(getMessages);
   const loading = useSelector(getMessagesLoading);
 
   const [message, setMessage] = useState("");
 
-  let messagesEnd = useRef<HTMLDivElement>();
+  const [chatId, setChatId] = useState(() => Cookie.get("chatId") ?? "");
 
   const { fullName } = useUser();
 
@@ -48,13 +43,16 @@ const ChatWidgetInner: React.FC<IChatWidgetInner> = ({ setIsOpen }) => {
 
   useEffect(() => {
     if (chatId) {
-      Cookie.set("chatId", String(chatId));
       dispatch(messageActions.setLoading());
       initialiseChat(chatId);
       return () => {
         WebSocketInstance.disconnect();
       };
     }
+  }, [chatId]);
+
+  useEffect(() => {
+    Cookie.set("chatId", chatId);
   }, [chatId]);
 
   const messageChangeHandler = (
@@ -77,12 +75,14 @@ const ChatWidgetInner: React.FC<IChatWidgetInner> = ({ setIsOpen }) => {
     e.preventDefault();
     if (message.trim() !== "") {
       if (!chatId) {
-        await dispatch(createChat());
-        if (chatId) {
-          initialiseChat(chatId, () => {
-            newChatMessageHandler();
-          });
-        }
+        await dispatch(
+          createChat((chatId: number) => {
+            setChatId(chatId.toString());
+          })
+        );
+        initialiseChat(chatId, () => {
+          newChatMessageHandler();
+        });
       } else {
         newChatMessageHandler();
       }
