@@ -6,7 +6,7 @@ def send_mass_notifications(instance, channel_name, event, exclude_manager=False
 	map(
 		lambda manager: settings.pusher_client.trigger(
 			f'{channel_name}{manager.id}', 
-			'event',
+			event,
 			{'chat': instance.id, 'user_name': instance.user_name}
 		),
 		Client.objects.filter(is_staff=True) if not exclude_manager else \
