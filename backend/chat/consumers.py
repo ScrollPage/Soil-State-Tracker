@@ -1,7 +1,10 @@
 from django.shortcuts import get_object_or_404
 
+import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+
+from chat.models import Chat, Message
 
 class ChatConsumer(WebsocketConsumer):
 
@@ -54,7 +57,7 @@ class ChatConsumer(WebsocketConsumer):
     def message_to_json(self, message):
         return {
             'id': message.id,
-            'full_name': message.full_name
+            'full_name': message.full_name,
             'content': message.content,
             'timestamp': str(message.timestamp),
         }
@@ -67,3 +70,10 @@ class ChatConsumer(WebsocketConsumer):
                 'message': message
             }
         )
+
+    def send_message(self, message):
+        self.send(text_data=json.dumps(message))
+
+    def chat_message(self, event):
+        message = event['message']
+        self.send(text_data=json.dumps(message))

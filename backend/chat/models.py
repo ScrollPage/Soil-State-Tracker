@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
+from django.utils import timezone
 
 from client.models import Client
 
@@ -9,7 +10,7 @@ class Message(models.Model):
     '''Сообщение'''
     full_name = models.CharField('Полное имя', max_length=50)
     content = models.TextField('Контент')
-    timestamp = models.DateTimeField('Время отправки', auto_now_add=True)
+    timestamp = models.DateTimeField('Время отправки', default=timezone.localtime(timezone.now()))
 
     def __str__(self):
             return f'{self.full_name} message'
