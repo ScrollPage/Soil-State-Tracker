@@ -5,12 +5,13 @@ from django.conf import settings
 from django.utils import timezone
 
 from client.models import Client
+from .service import send_mass_notifications
 
 class Message(models.Model):
     '''Сообщение'''
     full_name = models.CharField('Полное имя', max_length=50)
     content = models.TextField('Контент')
-    timestamp = models.DateTimeField('Время отправки', default=timezone.localtime(timezone.now()))
+    timestamp = models.DateTimeField('Время отправки', auto_now_add=True)
 
     def __str__(self):
             return f'{self.full_name} message'
@@ -51,13 +52,8 @@ class NewChatNotification(models.Model):
 @receiver(post_save, sender=Chat)
 def send_conf_mail(sender, instance=None, created=False, **kwargs):
     if created:
-        map(
-            lambda manager: settings.pusher_client.trigger(
-                f'notifications{manager.id}', 
-                'new_chat',
-                {'chat': instance.id, 'user_name': instance.user_name}
-            ),
-            Client.objects.filter(is_staff=True)
-        )
-
+        send_mass_notifications(instance, 'notifications', 'new_chat')
         NewChatNotification.objects.create(chat=instance, user_name=instance.user_name)
+    else:
+        send_mass_notifications(instance, 'notifications', 'chat_accepted', True)
+        NewChatNotification.objects.get(chat=instance).delete()
