@@ -3,6 +3,7 @@ from rest_framework.test import APITestCase
 from django.conf import settings
 
 from client.models import Client
+from company.models import Company
 from detector.models import Detector, DetectorData 
 from backend.service import get_response
 
@@ -16,6 +17,11 @@ class TestViews(APITestCase):
 			password='very_strong_psw',
 		)
 
+		self.company = Company.objects.create(
+			name='123',
+			admin=self.user1
+		)
+
 		detector = Detector.objects.create(user=self.user1, x=0, y=0)
 		DetectorData.objects.create(
 			detector=detector,
@@ -24,7 +30,9 @@ class TestViews(APITestCase):
 			third_temp=10,
 			lightning=10,
 			humidity=10,
-			pH=10
+			pH=10,
+			company=self.company,
+			user=self.user1
 		)
 
 		self.user2 = Client.objects.create_user(
@@ -55,10 +63,6 @@ class TestViews(APITestCase):
 	def test_detectors_detail(self):
 		response = get_response('detector-detail', 'get', self.user1, kwargs={'pk': 1})
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-	def test_detector_data_list_wrong_user(self):
-		response = get_response('detector-data-list', 'get', self.user2, kwargs={'pk': 1})
-		self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 	def test_detector_data_list(self):
 		response = get_response('detector-data-list', 'get', self.user1, kwargs={'pk': 1})

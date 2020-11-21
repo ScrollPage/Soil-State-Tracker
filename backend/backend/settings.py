@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from datetime import timedelta
 from . import local
@@ -15,12 +16,13 @@ SECRET_KEY = '!%f%!!gs*o*kl#b07k+2k8&uf2spv6-$mz3=re-f7vrprdldxj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -29,13 +31,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'cacheops',
-    'corsheaders',
     'channels',
+    'corsheaders',
     'djoser',
     'drf_yasg',
     'rest_auth',
     'rest_framework',
     'rest_framework.authtoken',
+    'silk',
 
     'chat',
     'client',
@@ -45,6 +48,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'silk.middleware.SilkyMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -81,7 +85,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('192.168.99.100', 6379)],
+            "hosts": [('127.0.0.1', 6379)],
         },
     },
 }
@@ -164,6 +168,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'static_root')
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static', 'static_files'),
+# )
 
 
 #JWT Authentication
@@ -221,7 +229,7 @@ pusher_client = pusher.Pusher(
 
 # Cacheops
 CACHEOPS_REDIS = {
-    'host': '192.168.99.100', # redis-server is on same machine
+    'host': '127.0.0.1', # redis-server is on same machine
     'port': 6379,        # default redis port
     'db': 1,             # SELECT non-default redis database
 }

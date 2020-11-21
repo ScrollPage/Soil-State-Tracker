@@ -16,6 +16,7 @@ urlpatterns = [
 
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
+    path('silk/', include('silk.urls')),
 ]
 
 urlpatterns += doc_urls

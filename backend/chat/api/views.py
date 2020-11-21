@@ -14,7 +14,7 @@ class ChatViewSet(PermissionSerializerListCreateViewSet):
     Создание Чата
     Принятие чата менеджером
     '''
-
+ 
     serializer_class = ChatSerializer
     permission_classes = [IsStaff]
     permission_classes_by_action = {
