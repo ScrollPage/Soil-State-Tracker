@@ -4,5 +4,6 @@ export const useUser = () => {
   const firstName = Cookie.get("firstName");
   const lastName = Cookie.get("lastName");
   const fullName = firstName ? `${firstName} ${lastName}` : 'AnonimousUser';
-  return { fullName, firstName, lastName }
+  const userId = Cookie.get('userId');
+  return { fullName, firstName, lastName, userId }
 }

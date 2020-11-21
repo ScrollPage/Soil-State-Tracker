@@ -1,59 +1,8 @@
 import { IMessage } from "@/types/message";
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import ChatMessage from "../ChatMessage";
 import { SChatInner } from "./styles";
-
-const data: IMessage[] = [
-  {
-    id: 1,
-    full_name: "Володя",
-    content: "Где мои бабка Дедди?",
-    timestamp: "5 минут назад",
-  },
-  {
-    id: 2,
-    full_name: "Володя",
-    content:
-      "В хуй не дуешь живешь роскошно припеваючи набахал себе телочек с восточных стран",
-    timestamp: "5 минут назад",
-  },
-  {
-    id: 3,
-    full_name: "Володя",
-    content: "Порежу всю твою семью",
-    timestamp: "5 минут назад",
-  },
-  {
-    id: 4,
-    full_name: "Гершпруд Рассел",
-    content: "Ля Володя, не торопись",
-    timestamp: "5 минут назад",
-  },
-  {
-    id: 5,
-    full_name: "Гершпруд Рассел",
-    content: "Какие плюшки?",
-    timestamp: "5 минут назад",
-  },
-  {
-    id: 6,
-    full_name: "Гершпруд Рассел",
-    content: "Дай мне только доделать торт и нассать нассать",
-    timestamp: "5 минут назад",
-  },
-  {
-    id: 7,
-    full_name: "Володя",
-    content: "Даю тебе пару дней, голубчик",
-    timestamp: "5 минут назад",
-  },
-  {
-    id: 7,
-    full_name: "Володя",
-    content: "Говна поешь потом",
-    timestamp: "5 минут назад",
-  },
-];
+import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
 
 const renderChatMessages = (data: IMessage[]) => {
   return data.map((item, index) => {
@@ -61,8 +10,37 @@ const renderChatMessages = (data: IMessage[]) => {
   });
 };
 
-const ChatInner = () => {
-  return <SChatInner>{renderChatMessages(data)}</SChatInner>;
+const ChatInner: React.FC<{ messages: IMessage[]; loading: boolean }> = ({
+  messages,
+  loading,
+}) => {
+  let messagesEnd = useRef<HTMLDivElement>();
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    // @ts-ignore: Unreachable code error
+    messagesEnd.scrollIntoViewIfNeeded({ behavior: "smooth" });
+  };
+
+  return (
+    <SChatInner>
+      {!messages || loading ? (
+        <p>Загрузка...</p>
+      ) : messages.length === 0 ? (
+        <p className="not-messages">У вас нет сообщений</p>
+      ) : (
+        renderChatMessages(messages)
+      )}
+      <div
+        className="messages-end"
+        // @ts-ignore: Unreachable code error
+        ref={(el) => (messagesEnd = el)}
+      />
+    </SChatInner>
+  );
 };
 
 export default ChatInner;

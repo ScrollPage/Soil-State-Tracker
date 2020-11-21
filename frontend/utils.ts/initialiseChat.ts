@@ -1,6 +1,6 @@
 import WebSocketInstance from '@/websocket';
 
-export const initialiseChat = (chatId: number, firstMessageCallback?: () => void): void => {
+export const initialiseChat = (chatId: string, firstMessageCallback?: () => void): void => {
   waitForSocketConnection(() => {
     if (firstMessageCallback) {
       firstMessageCallback();

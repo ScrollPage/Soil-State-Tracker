@@ -1,51 +1,43 @@
 import { IProtection } from "@/types/protection";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { SetStateAction } from "react";
-import { Dispatch } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { SHeaderMenu, SNavLink } from "./styles";
 
 interface INavitem {
   path: string;
   name: string;
-  isAuth: boolean;
-  isStaff: boolean;
-  isWorker: boolean;
+  isAuth?: boolean;
+  isStaff?: boolean;
+  isWorker?: boolean;
+  isAdmin?: boolean;
 }
 
 const navItems: INavitem[] = [
   {
-    isAuth: false,
-    isStaff: false,
-    isWorker: false,
     path: "/",
     name: "Главная",
   },
   {
-    isAuth: false,
-    isStaff: false,
-    isWorker: false,
     path: "/about",
     name: "О продукте",
   },
   {
     isAuth: true,
-    isStaff: false,
+    isAdmin: true,
     isWorker: true,
     path: "/data",
     name: "Данные",
   },
   {
     isAuth: true,
-    isStaff: false,
-    isWorker: false,
+    isAdmin: true,
     path: "/manage",
     name: "Управление",
   },
   {
     isAuth: true,
     isStaff: true,
-    isWorker: false,
     path: "/support",
     name: "Поддержка",
   },
@@ -58,6 +50,7 @@ export const renderLinks = (
 ) => {
   const router = useRouter();
   const { isAuth, isStaff, isWorker } = protection;
+  const isAdmin = !isStaff && !isWorker;
 
   const menuOpenHadler = () => {
     if (isDrower && setMenuOpen) {
@@ -66,10 +59,7 @@ export const renderLinks = (
   };
 
   const filterLinks = (item: INavitem) => {
-    let isShow =
-      (isAuth ? true : !item.isAuth) &&
-      (isStaff ? true : !item.isStaff) &&
-      (isWorker ? true : !item.isWorker);
+    let isShow = isAuth || !item.isAuth;
     return isShow;
   };
 

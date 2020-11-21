@@ -1,34 +1,47 @@
 import React from "react";
-import { SChatList, SChatSearch } from "./styles";
-import { IChat } from "@/types/chat";
+import { SChatList, SChatSearch, SChatListInner } from "./styles";
+import { IChat, INotify } from "@/types/chat";
 import ChatListItem from "./ChatListItem";
 
 const renderChatListItems = (data: IChat[]) => {
   return data.map((item, key) => {
     return (
-      <ChatListItem key={`chatlist__key__${item.user_name}`} chat={item} />
+      <ChatListItem
+        key={`chat__key__${item.user_name}__${key}`}
+        id={item.id}
+        userName={item.user_name}
+        isNotify={false}
+      />
+    );
+  });
+};
+
+const renderNotifyListItems = (data: INotify[]) => {
+  return data.map((item, key) => {
+    return (
+      <ChatListItem
+        key={`notify__key__${item.user_name}__${key}`}
+        id={item.chat}
+        userName={item.user_name}
+        isNotify={true}
+      />
     );
   });
 };
 
 interface IChatList {
   data: IChat[];
+  notify: INotify[];
 }
 
-const ChatList: React.FC<IChatList> = ({ data }) => {
-  const error = false;
+const ChatList: React.FC<IChatList> = ({ data, notify }) => {
   return (
     <SChatList>
       <SChatSearch>Поиск</SChatSearch>
-      {data ? (
-        data.length !== 0 ? (
-          renderChatListItems(data)
-        ) : null
-      ) : error ? (
-        <h2>Ошибка в выводе чатов</h2>
-      ) : (
-        <h2>Загрузка...</h2>
-      )}
+      <SChatListInner>
+        {data.length !== 0 ? renderNotifyListItems(notify) : "У вас нет чатов"}
+        {data.length !== 0 ? renderChatListItems(data) : "У вас нет чатов"}
+      </SChatListInner>
     </SChatList>
   );
 };

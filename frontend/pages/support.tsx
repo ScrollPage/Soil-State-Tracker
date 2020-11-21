@@ -1,31 +1,54 @@
 import Chat from "@/components/Chat";
-import { getAsString } from "@/utils.ts/getAsString";
 import { ensureAuth } from "@/utils.ts/ensure";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import styled from "styled-components";
+import { instanceWithSSR } from "@/api";
+import { IChat, INotify } from "@/types/chat";
 
 interface ISupport {
-  chatId: string | null;
+  chats: IChat[] | null;
+  notifications: INotify[] | null;
 }
 
-export default function Support({ chatId }: ISupport) {
+export default function Support({ chats, notifications }: ISupport) {
   return (
     <SSupport>
       <Head>
         <title>Поддержка</title>
       </Head>
-      <Chat chatId={chatId} />
+      <Chat chats={chats} notifications={notifications} />
     </SSupport>
   );
 }
 
 export const getServerSideProps: GetServerSideProps<ISupport> = async (ctx) => {
   ensureAuth(ctx);
-  const chatId = getAsString(ctx?.query?.id);
+
+  let chats: IChat[] | null = null;
+  await instanceWithSSR(ctx)
+    .get("/api/chat/")
+    .then((response) => {
+      chats = response?.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  let notifications: INotify[] | null = null;
+  await instanceWithSSR(ctx)
+    .get("/api/notifications/")
+    .then((response) => {
+      notifications = response?.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
   return {
     props: {
-      chatId: chatId || null,
+      chats: chats || null,
+      notifications: notifications || null,
     },
   };
 };
