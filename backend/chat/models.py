@@ -52,6 +52,7 @@ class NewChatNotification(models.Model):
 @receiver(post_save, sender=Chat)
 def send_conf_mail(sender, instance=None, created=False, **kwargs):
     if created:
+        print('asdasdasd')
         send_mass_notifications(instance, 'notifications', 'new_chat')
         NewChatNotification.objects.create(chat=instance, user_name=instance.user_name)
     else:
