@@ -2,26 +2,45 @@ import { INotify } from '@/types/chat';
 import { IChat } from '@/types/chat';
 import { mutate, trigger } from 'swr';
 
-export const acceptChatMutate = (chatId: number, userName: string) => {
-  const notifyUrl = "/api/notifications/";
-  console.log('out')
+export const acceptChatMutate = (notifyUrl: string, chatUrl: string, chatId: number, userName: string) => {
   mutate(notifyUrl, async (notify: INotify[]) => {
-    console.log('inner')
     if (notify) {
-      console.log('mutate')
       return notify.filter(item => item.chat !== chatId);
     }
   }, false);
-  // trigger(notifyUrl);
 
-  const chatUrl = "/api/chat/";
   mutate(chatUrl, async (chats: IChat[]) => {
     if (chats) {
+      console.log(JSON.stringify([...chats, {
+        id: chatId,
+        user_name: userName
+      }]))
       return [...chats, {
         id: chatId,
         user_name: userName
       }];
     }
   }, false);
-  // trigger(chatUrl);
 }
+
+export const addNotifyChatMutate = (notifyUrl: string, chatId: number, userName: string) => {
+  mutate(notifyUrl, async (notify: INotify[]) => {
+    if (notify) {
+      return [...notify, {
+        chat: chatId,
+        user_name: userName
+      }]
+    }
+  }, false);
+  trigger(notifyUrl);
+}
+
+export const removeNotifyChatMutate = (notifyUrl: string, chatId: number) => {
+  mutate(notifyUrl, async (notify: INotify[]) => {
+    if (notify) {
+      return notify.filter(item => item.chat !== chatId);
+    }
+  }, false);
+  trigger(notifyUrl);
+}
+

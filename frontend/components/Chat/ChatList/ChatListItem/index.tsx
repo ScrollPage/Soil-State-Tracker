@@ -1,7 +1,8 @@
-import { acceptChatMutate } from "@/mutates/chat";
 import { acceptChat } from "@/store/actions/chat";
+import { getAsString } from "@/utils.ts/getAsString";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { SChatListItem } from "./styles";
@@ -15,13 +16,19 @@ interface IChatListItem {
 const ChatListItem: React.FC<IChatListItem> = ({ userName, id, isNotify }) => {
   const dispatch = useDispatch();
 
+  const { query } = useRouter();
+
   const accceptHandler = () => {
-    dispatch(acceptChat(id));
-    acceptChatMutate(id, userName);
+    if (isNotify) {
+      dispatch(acceptChat(id, userName));
+    }
   };
 
   return (
-    <SChatListItem isNotify={isNotify}>
+    <SChatListItem
+      isNotify={isNotify}
+      isActive={getAsString(query.id) === String(id)}
+    >
       {isNotify ? (
         <>
           <h4>{userName}</h4>

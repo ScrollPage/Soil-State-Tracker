@@ -2,10 +2,10 @@ import WebSocketInstance from '@/websocket';
 
 export const initialiseChat = (chatId: string, firstMessageCallback?: () => void): void => {
   waitForSocketConnection(() => {
+    WebSocketInstance.fetchMessages(chatId);
     if (firstMessageCallback) {
       firstMessageCallback();
     }
-    WebSocketInstance.fetchMessages(chatId);
   });
   WebSocketInstance.connect(chatId);
 };

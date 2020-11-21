@@ -1,3 +1,6 @@
+import Router from 'next/router';
+import { trigger } from 'swr';
+import { acceptChatMutate } from '@/mutates/chat';
 import { IChat } from '@/types/chat';
 import Cookie from 'js-cookie';
 import { show } from '@/store/actions/alert';
@@ -12,6 +15,7 @@ export const createChat = (callback: (chatId: number) => void): ThunkType => asy
     .then(res => {
       const data: IChat = res.data;
       callback(data.id);
+      console.log(data.id);
       dispatch(show('Вы успешно создали чат!', 'success'));
     })
     .catch(err => {
@@ -19,15 +23,25 @@ export const createChat = (callback: (chatId: number) => void): ThunkType => asy
     });
 };
 
-export const acceptChat = (chatId: number): ThunkType => async dispatch => {
+export const acceptChat = (chatId: number, userName: string): ThunkType => async dispatch => {
   const token = Cookie.get('token');
+  const notifyUrl = "/api/notifications/";
+  const chatUrl = "/api/chat/";
+  acceptChatMutate(notifyUrl, chatUrl, chatId, userName);
+
   await instance(token)
     .post(`/api/chat/${chatId}/`, {})
     .then(res => {
       dispatch(show('Вы успешно приняли чат!', 'success'));
+      trigger(notifyUrl);
+      trigger(chatUrl);
+      Router.push({ pathname: '/support', query: { id: chatId } }, undefined, { shallow: true });
+
     })
     .catch(err => {
       dispatch(show('Ошибка принятия чата!', 'warning'));
+      trigger(notifyUrl);
+      trigger(chatUrl);
     });
 };
 

@@ -13,6 +13,9 @@ import WebSocketInstance from "@/websocket";
 import { IProtection } from "@/types/protection";
 import Pusher from "pusher-js";
 import { useUser } from "@/utils.ts/useUser";
+import { INotify } from "@/types/chat";
+import { addNotifyChatMutate, removeNotifyChatMutate } from "@/mutates/chat";
+import { show } from "@/store/actions/alert";
 
 interface IPrivateLayout {
   children: React.ReactNode;
@@ -29,14 +32,34 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children, protection }) => {
   const { userId } = useUser();
 
   useEffect(() => {
-    if (protection.isStaff) {
-      const pusher = new Pusher("cd195d4bd07dc0db154b", {
-        cluster: "eu",
-        // @ts-ignore: Unreachable code error
-        encrypted: true,
-      });
-      const channel = pusher.subscribe(`notifications${userId}`);
-    }
+    // if (protection.isStaff) {
+    const pusher = new Pusher("cd195d4bd07dc0db154b", {
+      cluster: "eu",
+      // @ts-ignore: Unreachable code error
+      encrypted: true,
+    });
+    console.log(userId);
+    const channel = pusher.subscribe(`notifications${userId}`);
+
+    const notifyUrl = "/api/notifications/";
+
+    channel.bind("new_chat", function (data: INotify) {
+      addNotifyChatMutate(notifyUrl, data.chat, data.user_name);
+      dispatch(show("Новый чат!", "success"));
+      console.log("new_chat");
+    });
+
+    channel.bind("chat_accepted", function (data: any) {
+      removeNotifyChatMutate(notifyUrl, data.chat);
+      dispatch(show("Новый чат принял другой менеджер!", "success"));
+      console.log("chat_accepted");
+    });
+
+    return () => {
+      console.log("sd");
+      pusher.disconnect();
+      // };
+    };
   }, [userId]);
 
   useEffect(() => {

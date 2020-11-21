@@ -1,4 +1,5 @@
 import { IMessage } from "@/types/message";
+import { renderTimestamp } from "@/utils.ts/renderTimestamp";
 import { UserOutlined } from "@ant-design/icons";
 import React from "react";
 import {
@@ -24,7 +25,7 @@ const ChatMessage: React.FC<IChatMessage> = ({ message }) => {
       <SChatMessageInner>
         <SChatMessageDescr>
           <p>{message.full_name}</p>
-          <small>{message.timestamp}</small>
+          <small>{renderTimestamp(message.timestamp)}</small>
         </SChatMessageDescr>
         <SChatMessageContent>{message.content}</SChatMessageContent>
       </SChatMessageInner>

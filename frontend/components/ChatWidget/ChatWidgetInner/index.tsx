@@ -35,6 +35,8 @@ const ChatWidgetInner: React.FC<IChatWidgetInner> = ({ setIsOpen }) => {
 
   const [chatId, setChatId] = useState(() => Cookie.get("chatId") ?? "");
 
+  const [isFirst, setIsFirst] = useState(false);
+
   const { fullName } = useUser();
 
   useEffect(() => {
@@ -42,13 +44,23 @@ const ChatWidgetInner: React.FC<IChatWidgetInner> = ({ setIsOpen }) => {
   }, [messages]);
 
   useEffect(() => {
-    if (chatId) {
+    if (chatId !== "") {
       dispatch(messageActions.setLoading());
-      initialiseChat(chatId);
-      return () => {
-        WebSocketInstance.disconnect();
-      };
+      if (isFirst) {
+        initialiseChat(chatId.toString(), () => {
+          if (message.trim() !== "") {
+            newChatMessageHandler();
+          }
+        });
+      } else {
+        initialiseChat(chatId);
+      }
     }
+    return () => {
+      if (chatId !== "") {
+        WebSocketInstance.disconnect();
+      }
+    };
   }, [chatId]);
 
   useEffect(() => {
@@ -77,12 +89,10 @@ const ChatWidgetInner: React.FC<IChatWidgetInner> = ({ setIsOpen }) => {
       if (!chatId) {
         await dispatch(
           createChat((chatId: number) => {
+            setIsFirst(true);
             setChatId(chatId.toString());
           })
         );
-        initialiseChat(chatId, () => {
-          newChatMessageHandler();
-        });
       } else {
         newChatMessageHandler();
       }

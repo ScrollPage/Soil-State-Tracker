@@ -1,6 +1,6 @@
 import { getMessages, getMessagesLoading } from "@/store/selectors";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ChatInfo from "./ChatInfo";
 import ChatInner from "./ChatInner";
@@ -14,7 +14,6 @@ import useSWR from "swr";
 import { initialiseChat } from "@/utils.ts/initialiseChat";
 import { useUser } from "@/utils.ts/useUser";
 import { getAsString } from "@/utils.ts/getAsString";
-import { notification } from "antd";
 
 interface IChatProps {
   chats: IChat[] | null;
@@ -38,7 +37,7 @@ const Chat: React.FC<IChatProps> = ({ chats, notifications }) => {
     return chats.find((chat: IChat) => chat.id === Number(id))?.user_name;
   };
 
-  const { data: chatsData, error: chatsError } = useSWR("/api/chats/", {
+  const { data: chatsData, error: chatsError } = useSWR("/api/chat/", {
     initialData: chats,
   });
 
