@@ -25,9 +25,11 @@ export const SChatMessageAvatar = styled.div`
 export const SChatMessageInner = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 export const SChatMessageDescr = styled.div`
   display: flex;
+  justify-content: space-between;
   > p {
     margin-right: 10px;
     font-weight: 500;

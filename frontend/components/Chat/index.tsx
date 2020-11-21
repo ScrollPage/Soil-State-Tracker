@@ -84,7 +84,7 @@ const Chat: React.FC<IChatProps> = ({ chats, notifications }) => {
   return (
     <SChat>
       <SChatLeft>
-        {chatsData && notifyData ? (
+        {chatsData || notifyData ? (
           <ChatList data={chatsData} notify={notifyData} />
         ) : chatsError || notifyError ? (
           <h2>Ошибка в выводе чатов</h2>

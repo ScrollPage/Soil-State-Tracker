@@ -11,10 +11,6 @@ export const acceptChatMutate = (notifyUrl: string, chatUrl: string, chatId: num
 
   mutate(chatUrl, async (chats: IChat[]) => {
     if (chats) {
-      console.log(JSON.stringify([...chats, {
-        id: chatId,
-        user_name: userName
-      }]))
       return [...chats, {
         id: chatId,
         user_name: userName

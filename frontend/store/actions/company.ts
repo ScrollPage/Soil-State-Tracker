@@ -44,7 +44,6 @@ export const deleteCompany = (id: number): ThunkType => async dispatch => {
 };
 export const changeCompany = (id: number, name: string, url: string, info: string): ThunkType => async dispatch => {
   const triggerUrl = "/api/company/";
-  console.log(id, name)
   changeCompanyMutate(triggerUrl, id, name, info, url);
 
   const token = Cookie.get('token');

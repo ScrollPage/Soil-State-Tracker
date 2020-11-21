@@ -15,7 +15,6 @@ export const createChat = (callback: (chatId: number) => void): ThunkType => asy
     .then(res => {
       const data: IChat = res.data;
       callback(data.id);
-      console.log(data.id);
       dispatch(show('Вы успешно создали чат!', 'success'));
     })
     .catch(err => {

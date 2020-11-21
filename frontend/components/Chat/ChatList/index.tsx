@@ -30,8 +30,8 @@ const renderNotifyListItems = (data: INotify[]) => {
 };
 
 interface IChatList {
-  data: IChat[];
-  notify: INotify[];
+  data?: IChat[] | null;
+  notify?: INotify[] | null;
 }
 
 const ChatList: React.FC<IChatList> = ({ data, notify }) => {
@@ -39,8 +39,16 @@ const ChatList: React.FC<IChatList> = ({ data, notify }) => {
     <SChatList>
       <SChatSearch>Поиск</SChatSearch>
       <SChatListInner>
-        {data.length !== 0 ? renderNotifyListItems(notify) : "У вас нет чатов"}
-        {data.length !== 0 ? renderChatListItems(data) : "У вас нет чатов"}
+        {notify
+          ? notify.length !== 0
+            ? renderNotifyListItems(notify)
+            : "У вас нет чатов"
+          : "Ошибка"}
+        {data
+          ? data.length !== 0
+            ? renderChatListItems(data)
+            : "У вас нет чатов"
+          : "Ошибка"}
       </SChatListInner>
     </SChatList>
   );

@@ -3,7 +3,6 @@ export const renderTimestamp = (timestamp: string): string => {
   const timeDiff = Math.round(
     (new Date().getTime() - new Date(timestamp).getTime()) / 60000
   );
-  console.log(timeDiff)
   if (timeDiff < 1) {
     prefix = 'только что...';
   } else if (timeDiff < 60 && timeDiff > 1) {

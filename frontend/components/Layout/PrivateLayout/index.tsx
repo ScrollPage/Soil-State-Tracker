@@ -38,7 +38,6 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children, protection }) => {
       // @ts-ignore: Unreachable code error
       encrypted: true,
     });
-    console.log(userId);
     const channel = pusher.subscribe(`notifications${userId}`);
 
     const notifyUrl = "/api/notifications/";
@@ -56,7 +55,6 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children, protection }) => {
     });
 
     return () => {
-      console.log("sd");
       pusher.disconnect();
       // };
     };
