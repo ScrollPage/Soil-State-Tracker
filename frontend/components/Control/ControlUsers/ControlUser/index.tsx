@@ -15,7 +15,7 @@ import {
   SControlUserArrows,
 } from "./styles";
 import { Tooltip } from "antd";
-import { useWindowSize } from "@/utils.ts/useWindowSize";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 interface IControlUser {
   worker: IWorker;

@@ -3,6 +3,10 @@ import React, { useRef, useEffect } from "react";
 import ChatMessage from "../ChatMessage";
 import { SChatInner } from "./styles";
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed";
+import LoadingSpinner from "@/components/UI/LoadingSpinner";
+import EmptyMessage from "@/components/UI/EmptyMessage";
+import { useSelector } from "react-redux";
+import { getMessages, getMessagesLoading } from "@/store/selectors";
 
 const renderChatMessages = (data: IMessage[]) => {
   return data.map((item, index) => {
@@ -10,10 +14,10 @@ const renderChatMessages = (data: IMessage[]) => {
   });
 };
 
-const ChatInner: React.FC<{ messages: IMessage[]; loading: boolean }> = ({
-  messages,
-  loading,
-}) => {
+const ChatInner: React.FC<{}> = ({}) => {
+  const messages = useSelector(getMessages);
+  const loading = useSelector(getMessagesLoading);
+
   let messagesEnd = useRef<HTMLDivElement>();
 
   useEffect(() => {
@@ -22,15 +26,17 @@ const ChatInner: React.FC<{ messages: IMessage[]; loading: boolean }> = ({
 
   const scrollToBottom = () => {
     // @ts-ignore: Unreachable code error
-    messagesEnd.scrollIntoViewIfNeeded({ behavior: "smooth" });
+    messagesEnd?.scrollIntoViewIfNeeded({ behavior: "smooth" });
   };
+
+  const isLoading = !messages || loading;
 
   return (
     <SChatInner>
-      {!messages || loading ? (
-        <p>Загрузка...</p>
+      {isLoading ? (
+        <LoadingSpinner />
       ) : messages.length === 0 ? (
-        <p className="not-messages">У вас нет сообщений</p>
+        <EmptyMessage message="У вас пока нет сообщений..." />
       ) : (
         renderChatMessages(messages)
       )}

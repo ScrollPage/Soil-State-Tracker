@@ -1,55 +1,40 @@
 import React from "react";
-import { SChatList, SChatSearch, SChatListInner } from "./styles";
+import { SChatList } from "./styles";
 import { IChat, INotify } from "@/types/chat";
 import ChatListItem from "./ChatListItem";
-
-const renderChatListItems = (data: IChat[]) => {
-  return data.map((item, key) => {
-    return (
-      <ChatListItem
-        key={`chat__key__${item.user_name}__${key}`}
-        id={item.id}
-        userName={item.user_name}
-        isNotify={false}
-      />
-    );
-  });
-};
-
-const renderNotifyListItems = (data: INotify[]) => {
-  return data.map((item, key) => {
-    return (
-      <ChatListItem
-        key={`notify__key__${item.user_name}__${key}`}
-        id={item.chat}
-        userName={item.user_name}
-        isNotify={true}
-      />
-    );
-  });
-};
+import useSWR from "swr";
+import ErrorMessage from "@/components/UI/ErrorMessage";
+import LoadingSpinner from "@/components/UI/LoadingSpinner";
+import EmptyMessage from "@/components/UI/EmptyMessage";
 
 interface IChatList {
-  data?: IChat[] | null;
-  notify?: INotify[] | null;
+  chats: IChat[] | null;
 }
 
-const ChatList: React.FC<IChatList> = ({ data, notify }) => {
+const ChatList: React.FC<IChatList> = ({ chats }) => {
+  const { data, error } = useSWR("/api/chat/", {
+    initialData: chats,
+  });
+
+  if (error) return <ErrorMessage message="Ошибка загрузки чатов..." />;
+
+  if (!data) return <LoadingSpinner />;
+
+  if (data.length === 0)
+    return <EmptyMessage message="У вас пока нет чатов..." />;
+
   return (
     <SChatList>
-      <SChatSearch>Поиск</SChatSearch>
-      <SChatListInner>
-        {notify
-          ? notify.length !== 0
-            ? renderNotifyListItems(notify)
-            : null
-          : "Ошибка"}
-        {data
-          ? data.length !== 0
-            ? renderChatListItems(data)
-            : "У вас нет чатов"
-          : "Ошибка"}
-      </SChatListInner>
+      {data.map((item, key) => {
+        return (
+          <ChatListItem
+            key={`chat__key__${item.user_name}__${key}`}
+            id={item.id}
+            userName={item.user_name}
+            isNotify={false}
+          />
+        );
+      })}
     </SChatList>
   );
 };

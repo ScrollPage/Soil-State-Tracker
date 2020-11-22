@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
-import Container from "../Container";
+import Container from "../UI/Container";
 import { SButton } from "../UI/Button";
 import HeaderMenu from "./HeaderMenu";
 import { SHeader, SInner, SItem, SItemLink, SItemBtn } from "./styles";

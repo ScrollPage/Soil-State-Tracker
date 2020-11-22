@@ -8,7 +8,7 @@ import { messageActions } from "@/store/actions/message";
 import { initialiseChat } from "@/utils.ts/initialiseChat";
 import ChatInput from "@/components/Chat/ChatInput";
 import ChatMessage from "@/components/Chat/ChatMessage";
-import { useUser } from "@/utils.ts/useUser";
+import { getUser } from "@/utils.ts/getUser";
 import {
   SChatWidget,
   SChatWidgetTop,
@@ -37,7 +37,7 @@ const ChatWidgetInner: React.FC<IChatWidgetInner> = ({ setIsOpen }) => {
 
   const [isFirst, setIsFirst] = useState(false);
 
-  const { fullName } = useUser();
+  const { fullName } = getUser();
 
   useEffect(() => {
     scrollToBottom();
