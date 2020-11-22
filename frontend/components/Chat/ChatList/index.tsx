@@ -42,7 +42,7 @@ const ChatList: React.FC<IChatList> = ({ data, notify }) => {
         {notify
           ? notify.length !== 0
             ? renderNotifyListItems(notify)
-            : "У вас нет чатов"
+            : null
           : "Ошибка"}
         {data
           ? data.length !== 0

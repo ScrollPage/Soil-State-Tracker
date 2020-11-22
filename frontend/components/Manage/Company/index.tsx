@@ -18,7 +18,7 @@ const renderCompanyItems = (company: ICompany[]) => {
   ));
 };
 
-const Company = ({ company }: ICompanyFC) => {
+const Company: React.FC<ICompanyFC> = ({ company }) => {
   const { data, error } = useSWR("/api/company/", {
     initialData: company,
   });

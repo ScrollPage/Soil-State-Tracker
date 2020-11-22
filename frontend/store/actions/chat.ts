@@ -32,15 +32,13 @@ export const acceptChat = (chatId: number, userName: string): ThunkType => async
     .post(`/api/chat/${chatId}/`, {})
     .then(res => {
       dispatch(show('Вы успешно приняли чат!', 'success'));
-      trigger(notifyUrl);
-      trigger(chatUrl);
       Router.push({ pathname: '/support', query: { id: chatId } }, undefined, { shallow: true });
 
     })
     .catch(err => {
       dispatch(show('Ошибка принятия чата!', 'warning'));
-      trigger(notifyUrl);
-      trigger(chatUrl);
     });
+  trigger(notifyUrl);
+  trigger(chatUrl);
 };
 

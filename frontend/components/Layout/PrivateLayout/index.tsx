@@ -16,6 +16,7 @@ import { useUser } from "@/utils.ts/useUser";
 import { INotify } from "@/types/chat";
 import { addNotifyChatMutate, removeNotifyChatMutate } from "@/mutates/chat";
 import { show } from "@/store/actions/alert";
+import { trigger } from "swr";
 
 interface IPrivateLayout {
   children: React.ReactNode;
@@ -39,21 +40,18 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children, protection }) => {
       encrypted: true,
     });
     const channel = pusher.subscribe(`notifications${userId}`);
-
     const notifyUrl = "/api/notifications/";
-
     channel.bind("new_chat", function (data: INotify) {
       addNotifyChatMutate(notifyUrl, data.chat, data.user_name);
       dispatch(show("Новый чат!", "success"));
       console.log("new_chat");
     });
-
     channel.bind("chat_accepted", function (data: any) {
+      console.log(data);
       removeNotifyChatMutate(notifyUrl, data.chat);
       dispatch(show("Новый чат принял другой менеджер!", "success"));
       console.log("chat_accepted");
     });
-
     return () => {
       pusher.disconnect();
       // };

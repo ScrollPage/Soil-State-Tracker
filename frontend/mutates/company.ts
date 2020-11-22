@@ -1,7 +1,7 @@
 import { ICompany } from '@/types/company';
 import { mutate } from 'swr';
 
-export const addCompanyMutate = (url: string, name: string, info: string, companyUrl: string) => {
+export const addCompanyMutate = async (url: string, name: string, info: string, companyUrl: string) => {
   const companyItem: ICompany = {
     id: 0,
     info,
@@ -10,23 +10,23 @@ export const addCompanyMutate = (url: string, name: string, info: string, compan
     url: companyUrl,
     workers: []
   }
-  mutate(url, async (company: ICompany[]) => {
+  await mutate(url, async (company: ICompany[]) => {
     if (company) {
       return [...company, companyItem];
     }
   }, false);
 }
 
-export const deleteCompanyMutate = (url: string, id: number) => {
-  mutate(url, async (company: ICompany[]) => {
+export const deleteCompanyMutate = async (url: string, id: number) => {
+  await mutate(url, async (company: ICompany[]) => {
     if (company) {
       return company.filter(companyitem => companyitem.id !== id);
     }
   }, false);
 }
 
-export const changeCompanyMutate = (triggerUrl: string, id: number, name: string, info: string, url: string) => {
-  mutate(triggerUrl, async (company: ICompany[]) => {
+export const changeCompanyMutate = async (triggerUrl: string, id: number, name: string, info: string, url: string) => {
+  await mutate(triggerUrl, async (company: ICompany[]) => {
     if (company) {
       const index = company.findIndex(item => item.id === id);
       let newCompany = [...company];

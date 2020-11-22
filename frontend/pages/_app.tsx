@@ -46,7 +46,7 @@ const MyApp = ({ Component, pageProps, protection }: IMyApp) => {
         <GlobalStyle />
         <SWRConfig
           value={{
-            revalidateOnMount: false,
+            revalidateOnMount: true,
             revalidateOnFocus: false,
             dedupingInterval: 1000,
             fetcher: (url) =>

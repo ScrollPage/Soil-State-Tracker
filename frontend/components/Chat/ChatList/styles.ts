@@ -7,6 +7,7 @@ export const SChatList = styled.div`
 `;
 
 export const SChatListInner = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
