@@ -1,4 +1,4 @@
-import PrivateLayout from "@/components/Layout/PrivateLayout";
+import Layout from "@/components/Layout/Layout";
 import Head from "next/head";
 import stylesheet from "antd/dist/antd.min.css";
 import nprogress from "nprogress/nprogress.css";
@@ -46,7 +46,7 @@ const MyApp = ({ Component, pageProps, protection }: IMyApp) => {
         <GlobalStyle />
         <SWRConfig
           value={{
-            revalidateOnMount: false,
+            revalidateOnMount: true,
             revalidateOnFocus: false,
             dedupingInterval: 1000,
             fetcher: (url) =>
@@ -63,9 +63,9 @@ const MyApp = ({ Component, pageProps, protection }: IMyApp) => {
           <Provider store={store}>
             <Alert />
             <RootModal />
-            <PrivateLayout protection={protection}>
+            <Layout protection={protection}>
               <Component {...pageProps} />
-            </PrivateLayout>
+            </Layout>
           </Provider>
         </SWRConfig>
       </>

@@ -24,7 +24,7 @@ export default function Manage({ company }: IManage) {
 export const getServerSideProps: GetServerSideProps<IManage> = async (ctx) => {
   ensureAuth(ctx);
   let company: ICompany[] | null = null;
-  await instanceWithSSR(ctx)
+  await instanceWithSSR(ctx) // axios config
     .get(`/api/company/`)
     .then((response) => {
       company = response?.data;

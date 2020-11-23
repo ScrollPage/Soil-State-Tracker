@@ -1,6 +1,6 @@
 import Cookie from 'js-cookie';
 
-export const useUser = () => {
+export const getUser = () => {
   const firstName = Cookie.get("firstName");
   const lastName = Cookie.get("lastName");
   const fullName = firstName ? `${firstName} ${lastName}` : 'AnonimousUser';

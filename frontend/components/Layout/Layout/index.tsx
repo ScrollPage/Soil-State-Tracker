@@ -1,8 +1,8 @@
-import Container from "@/components/Container";
+import Container from "@/components/UI/Container";
 import Header from "@/components/Header";
 import React, { useRef, useState, useEffect } from "react";
 import Drower from "../Drower";
-import { SPrivateLayout, SMain } from "./styles";
+import { SLayout, SMain } from "./styles";
 import gsap from "gsap";
 import { useDispatch } from "react-redux";
 import { authCheckState } from "@/store/actions/auth";
@@ -12,24 +12,24 @@ import { IMessage, IMessages } from "@/types/message";
 import WebSocketInstance from "@/websocket";
 import { IProtection } from "@/types/protection";
 import Pusher from "pusher-js";
-import { useUser } from "@/utils.ts/useUser";
+import { getUser } from "@/utils.ts/getUser";
 import { INotify } from "@/types/chat";
 import { addNotifyChatMutate, removeNotifyChatMutate } from "@/mutates/chat";
 import { show } from "@/store/actions/alert";
 
-interface IPrivateLayout {
+interface ILayout {
   children: React.ReactNode;
   protection: IProtection;
 }
 
-const PrivateLayout: React.FC<IPrivateLayout> = ({ children, protection }) => {
+const Layout: React.FC<ILayout> = ({ children, protection }) => {
   const dispatch = useDispatch();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
   let layout = useRef<HTMLDivElement>(null);
 
-  const { userId } = useUser();
+  const { userId } = getUser();
 
   useEffect(() => {
     // if (protection.isStaff) {
@@ -39,21 +39,18 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children, protection }) => {
       encrypted: true,
     });
     const channel = pusher.subscribe(`notifications${userId}`);
-
     const notifyUrl = "/api/notifications/";
-
     channel.bind("new_chat", function (data: INotify) {
       addNotifyChatMutate(notifyUrl, data.chat, data.user_name);
       dispatch(show("Новый чат!", "success"));
       console.log("new_chat");
     });
-
     channel.bind("chat_accepted", function (data: any) {
+      console.log(data);
       removeNotifyChatMutate(notifyUrl, data.chat);
       dispatch(show("Новый чат принял другой менеджер!", "success"));
       console.log("chat_accepted");
     });
-
     return () => {
       pusher.disconnect();
       // };
@@ -91,12 +88,12 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children, protection }) => {
 
   return (
     <>
-      <SPrivateLayout ref={layout}>
+      <SLayout ref={layout}>
         <Header protection={protection} setMenuOpen={setMenuOpen} />
         <SMain>
           <Container>{children}</Container>
         </SMain>
-      </SPrivateLayout>
+      </SLayout>
       <Drower
         protection={protection}
         setMenuOpen={setMenuOpen}
@@ -107,4 +104,4 @@ const PrivateLayout: React.FC<IPrivateLayout> = ({ children, protection }) => {
   );
 };
 
-export default PrivateLayout;
+export default Layout;

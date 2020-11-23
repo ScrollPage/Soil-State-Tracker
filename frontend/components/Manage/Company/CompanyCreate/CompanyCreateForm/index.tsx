@@ -68,8 +68,8 @@ const CompanyCreateForm = ({
       }}
       onSubmit={(values, { setSubmitting, resetForm }) => {
         setSubmitting(true);
+        createCompanyHandler(values);
         setTimeout(() => {
-          createCompanyHandler(values);
           setSubmitting(false);
           resetForm();
         }, 1000);

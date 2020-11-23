@@ -17,13 +17,12 @@ export const addCompany = (name: string, url: string, info: string,): ThunkType 
       info,
     })
     .then(() => {
-      trigger(triggerUrl);
       dispatch(show('Вы успешно добавили компанию!', 'success'));
     })
     .catch(() => {
-      trigger(triggerUrl);
       dispatch(show('Ошибка добавления компании!', 'warning'));
     });
+  trigger(triggerUrl);
 };
 
 export const deleteCompany = (id: number): ThunkType => async dispatch => {
@@ -34,13 +33,13 @@ export const deleteCompany = (id: number): ThunkType => async dispatch => {
   await instance(token)
     .delete(`/api/company/${id}/`)
     .then(() => {
-      trigger(triggerUrl);
       dispatch(show('Вы успешно удалили компанию!', 'success'));
     })
     .catch(() => {
-      trigger(triggerUrl);
       dispatch(show('Ошибка в удалении компании!', 'warning'));
     });
+  trigger(triggerUrl);
+
 };
 export const changeCompany = (id: number, name: string, url: string, info: string): ThunkType => async dispatch => {
   const triggerUrl = "/api/company/";
@@ -54,11 +53,11 @@ export const changeCompany = (id: number, name: string, url: string, info: strin
       info,
     })
     .then(() => {
-      trigger(triggerUrl);
       dispatch(show('Вы успешно изменили данные о компании!', 'success'));
     })
     .catch(() => {
-      trigger(triggerUrl);
       dispatch(show('Ошибка в изменении данных о компании!', 'warning'));
     });
+  trigger(triggerUrl);
+
 };

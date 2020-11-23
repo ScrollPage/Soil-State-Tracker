@@ -2,14 +2,14 @@ import { INotify } from '@/types/chat';
 import { IChat } from '@/types/chat';
 import { mutate, trigger } from 'swr';
 
-export const acceptChatMutate = (notifyUrl: string, chatUrl: string, chatId: number, userName: string) => {
-  mutate(notifyUrl, async (notify: INotify[]) => {
+export const acceptChatMutate = async (notifyUrl: string, chatUrl: string, chatId: number, userName: string) => {
+  await mutate(notifyUrl, async (notify: INotify[]) => {
     if (notify) {
       return notify.filter(item => item.chat !== chatId);
     }
   }, false);
 
-  mutate(chatUrl, async (chats: IChat[]) => {
+  await mutate(chatUrl, async (chats: IChat[]) => {
     if (chats) {
       return [...chats, {
         id: chatId,
@@ -19,8 +19,8 @@ export const acceptChatMutate = (notifyUrl: string, chatUrl: string, chatId: num
   }, false);
 }
 
-export const addNotifyChatMutate = (notifyUrl: string, chatId: number, userName: string) => {
-  mutate(notifyUrl, async (notify: INotify[]) => {
+export const addNotifyChatMutate = async (notifyUrl: string, chatId: number, userName: string) => {
+  await mutate(notifyUrl, async (notify: INotify[]) => {
     if (notify) {
       return [...notify, {
         chat: chatId,
@@ -31,8 +31,8 @@ export const addNotifyChatMutate = (notifyUrl: string, chatId: number, userName:
   trigger(notifyUrl);
 }
 
-export const removeNotifyChatMutate = (notifyUrl: string, chatId: number) => {
-  mutate(notifyUrl, async (notify: INotify[]) => {
+export const removeNotifyChatMutate = async (notifyUrl: string, chatId: number) => {
+  await mutate(notifyUrl, async (notify: INotify[]) => {
     if (notify) {
       return notify.filter(item => item.chat !== chatId);
     }

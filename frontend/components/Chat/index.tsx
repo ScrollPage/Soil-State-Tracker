@@ -1,19 +1,24 @@
-import { getMessages, getMessagesLoading } from "@/store/selectors";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import ChatInfo from "./ChatInfo";
 import ChatInner from "./ChatInner";
 import ChatInput from "./ChatInput";
-import { SChat, SChatLeft, SChatRight } from "./styles";
+import {
+  SChat,
+  SChatLeft,
+  SChatRight,
+  SChatSearch,
+  SChatLeftInner,
+} from "./styles";
 import { messageActions } from "@/store/actions/message";
 import WebSocketInstance from "@/websocket";
-import ChatList from "./ChatList";
 import { IChat, INotify } from "@/types/chat";
-import useSWR from "swr";
 import { initialiseChat } from "@/utils.ts/initialiseChat";
-import { useUser } from "@/utils.ts/useUser";
+import { getUser } from "@/utils.ts/getUser";
 import { getAsString } from "@/utils.ts/getAsString";
+import ChatList from "./ChatList";
+import NotifyList from "./ChatNotifyList";
 
 interface IChatProps {
   chats: IChat[] | null;
@@ -22,11 +27,9 @@ interface IChatProps {
 
 const Chat: React.FC<IChatProps> = ({ chats, notifications }) => {
   const dispatch = useDispatch();
-  const messages = useSelector(getMessages);
-  const loading = useSelector(getMessagesLoading);
   const [message, setMessage] = useState("");
   const [chatId, setChatId] = useState<string | undefined>(undefined);
-  const { fullName } = useUser();
+  const { fullName } = getUser();
   const { query } = useRouter();
 
   useEffect(() => {
@@ -36,17 +39,6 @@ const Chat: React.FC<IChatProps> = ({ chats, notifications }) => {
   const getChatNameById = (chats: IChat[], id: string) => {
     return chats.find((chat: IChat) => chat.id === Number(id))?.user_name;
   };
-
-  const { data: chatsData, error: chatsError } = useSWR("/api/chat/", {
-    initialData: chats,
-  });
-
-  const { data: notifyData, error: notifyError } = useSWR(
-    "/api/notifications/",
-    {
-      initialData: notifications,
-    }
-  );
 
   useEffect(() => {
     if (chatId) {
@@ -84,19 +76,17 @@ const Chat: React.FC<IChatProps> = ({ chats, notifications }) => {
   return (
     <SChat>
       <SChatLeft>
-        {chatsData || notifyData ? (
-          <ChatList data={chatsData} notify={notifyData} />
-        ) : chatsError || notifyError ? (
-          <h2>Ошибка в выводе чатов</h2>
-        ) : (
-          <h2>Загрузка...</h2>
-        )}
+        <SChatSearch>Поиск</SChatSearch>
+        <SChatLeftInner>
+          <NotifyList notifications={notifications} />
+          <ChatList chats={chats} />
+        </SChatLeftInner>
       </SChatLeft>
       <SChatRight>
-        {chatId && chatsData && (
+        {chatId && chats && (
           <>
-            <ChatInfo name={getChatNameById(chatsData, chatId)} />
-            <ChatInner messages={messages} loading={loading} />
+            <ChatInfo name={getChatNameById(chats, chatId)} />
+            <ChatInner />
             <ChatInput
               sendMessage={sendMessageHandler}
               messageChange={messageChangeHandler}
