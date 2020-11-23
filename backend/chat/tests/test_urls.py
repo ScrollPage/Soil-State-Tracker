@@ -10,8 +10,8 @@ class TestUrls(TestCase):
 
     def test_accept_manager_url(self):
         '''Убедиться, что ссылка и вью связаны правильно'''
-        path = reverse('accept-manager', kwargs={'pk': 1})
-        self.assertEqual(resolve(path).view_name, 'accept-manager')
+        path = reverse('accept-manager-read-messages', kwargs={'pk': 1})
+        self.assertEqual(resolve(path).view_name, 'accept-manager-read-messages')
 
     def test_notifications_url(self):
         '''Убедиться, что ссылка и вью связаны правильно'''

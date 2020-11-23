@@ -8,8 +8,10 @@ urlpatterns = [
     path('notifications/', ChatNotificationsListView.as_view(), name='notifications')
 ]
 
-accept_manager = ChatViewSet.as_view({
+accept_manager_read_messages = ChatViewSet.as_view({
+    'put': 'read_messages',
     'post': 'accept_manager',
+    'get': 'retrieve'
 })
 
 chat = ChatViewSet.as_view({
@@ -19,5 +21,5 @@ chat = ChatViewSet.as_view({
 
 urlpatterns += format_suffix_patterns([
     path('chat/', chat, name='chat-list'),
-    path('chat/<int:pk>/', accept_manager, name='accept-manager'),
+    path('chat/<int:pk>/', accept_manager_read_messages, name='accept-manager-read-messages'),
 ])

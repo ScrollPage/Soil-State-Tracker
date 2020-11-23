@@ -8,10 +8,11 @@ class ChatSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     manager = serializers.CharField(read_only=True)
     user_name = serializers.CharField(read_only=True)
+    is_read = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Chat
-        fields = ['id', 'manager', 'user_name']
+        fields = ['id', 'manager', 'user_name', 'is_read']
 
     def to_representation(self, value):
         res = super().to_representation(value)

@@ -25,9 +25,8 @@ class ChatConsumer(WebsocketConsumer):
         )
 
     def new_message(self, data):
-        current_chat = get_object_or_404(Chat, id=data.pop('chatId'))
-        message = Message.objects.create(**data)
-        current_chat.messages.add(message)
+        chat = get_object_or_404(Chat, id=data.pop('chat'))
+        message = Message.objects.create(**data, chat=current_chat)
         content = {
             'command': 'new_message',
             'message': self.message_to_json(message)

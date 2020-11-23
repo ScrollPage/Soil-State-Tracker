@@ -240,7 +240,9 @@ CACHEOPS_DEFAULTS = {
 CACHEOPS = {
     'company.company': {'ops': 'all'},
     'detector.detector': {'ops': 'all'},
-    'client.client': {'ops': 'all'}
+    'client.client': {'ops': 'all'},
+    'chat.message': {'ops': 'all'},
+    'chat.chat': {'ops': 'all'}
 }
 
 TIME_ZONE = 'UTC'

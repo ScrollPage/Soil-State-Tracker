@@ -9,6 +9,8 @@ class PermissionSerializerListCreateViewSet(PermissionMixin,
                                             GenericViewSet,
                                             mixins.CreateModelMixin,
                                             mixins.ListModelMixin,
+                                            mixins.DestroyModelMixin,
+                                            mixins.RetrieveModelMixin,
                                         ):
     '''
     Список, создание, отдельный элемент

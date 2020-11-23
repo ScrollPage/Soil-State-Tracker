@@ -53,11 +53,11 @@ class TestViews(APITestCase):
         self.assertEqual(response.data[0]['user_name'], 'case test 1')
 
     def test_accept_manager_already_accepted(self):
-        response = get_response('accept-manager', 'post', self.user3, kwargs={'pk': 1})
+        response = get_response('accept-manager-read-messages', 'post', self.user3, kwargs={'pk': 1})
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_accept_manager(self):
-        response = get_response('accept-manager', 'post', self.user3, kwargs={'pk': 2})
+        response = get_response('accept-manager-read-messages', 'post', self.user3, kwargs={'pk': 2})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_notifications_unauth(self):
@@ -74,6 +74,23 @@ class TestViews(APITestCase):
         self.assertEqual(len(response.data), 2)
         self.assertEqual(response.data[0]['chat'], 1)
 
+    def test_read_mesages_unauth(self):
+        response = get_response('accept-manager-read-messages', 'put', kwargs={'pk': 1})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_read_mesages_unauth(self):
+        response = get_response('accept-manager-read-messages', 'put', self.user3, kwargs={'pk': 1})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_read_mesages_unauth(self):
+        response = get_response('accept-manager-read-messages', 'put', self.user1, kwargs={'pk': 1})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_read_messages_retrieve_unauth(self):
+        resposne = get_response('accept-manager-read-messages', 'get', self.user3, kwargs={'pk': 1})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_read_messages_retrieve_unauth(self):
+        response = get_response('accept-manager-read-messages', 'get', self.user1, kwargs={'pk': 1})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
     

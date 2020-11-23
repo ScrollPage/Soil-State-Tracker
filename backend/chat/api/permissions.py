@@ -13,3 +13,9 @@ class NoManager(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return not obj.manager
+
+class CorrectManager(BasePermission):
+    '''Правильный менеджер'''
+
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj.manager
