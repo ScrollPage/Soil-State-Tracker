@@ -38,9 +38,7 @@ class ChatViewSet(PermissionSerializerListCreateViewSet):
                     )
                 )
 
-            @cached_as(queryset)
             def _annotate_chat(queryset=queryset):
-                print('asdasdasdasd')
                 return queryset \
                     .annotate(is_read=Count('messages', filter=Q(messages__is_read=False)))
 
