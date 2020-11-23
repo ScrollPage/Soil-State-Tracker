@@ -62,5 +62,5 @@ def notify_chat(sender, instance=None, created=False, **kwargs):
 @receiver(post_save, sender=Message)
 def notify_message(sender, instance, created=False, **kwargs):
     if created:
-        if not instance.is_read:
+        if not instance.is_read and instance.chat.manager:
             send_notification(instance.chat.manager, instance.chat, 'notifications', 'new_message')
