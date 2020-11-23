@@ -36,13 +36,10 @@ class ChatViewSet(PermissionSerializerListCreateViewSet):
                         'messages',
                         queryset=Message.objects.all().only('is_read')
                     )
-                )
+                ) \
+                .annotate(is_read=Count('messages', filter=Q(messages__is_read=False)))
 
-            def _annotate_chat(queryset=queryset):
-                return queryset \
-                    .annotate(is_read=Count('messages', filter=Q(messages__is_read=False)))
-
-            return _annotate_chat()
+            return queryset
                 
         elif self.action == 'accept_manager' or self.action == 'read_messages':
             return Chat.objects.all()
