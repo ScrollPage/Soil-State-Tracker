@@ -1,3 +1,4 @@
+
 export type IMessages = IMessage[]
 
 export interface IMessage {
@@ -5,4 +6,5 @@ export interface IMessage {
   full_name: string;
   content: string;
   timestamp: string;
+  is_read: boolean;
 }

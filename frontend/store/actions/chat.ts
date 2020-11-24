@@ -42,3 +42,16 @@ export const acceptChat = (chatId: number, userName: string): ThunkType => async
   trigger(chatUrl);
 };
 
+export const readChat = (chatId: number): ThunkType => async dispatch => {
+  const token = Cookie.get('token');
+  await instance(token)
+    .put(`/api/chat/${chatId}/`, {})
+    .then(res => console.log('Вы успешно прочитали чат!'))
+    .catch(err => {
+      dispatch(show('Ошибка прочтения чата!', 'warning'));
+    })
+}
+
+
+
+

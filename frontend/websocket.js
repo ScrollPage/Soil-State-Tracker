@@ -60,9 +60,10 @@ class WebSocketService {
     newChatMessage(message) {
         this.sendMessage({
             command: 'new_message',
-            chatId: message.chatId,
+            chat: message.chatId,
             content: message.content,
-            full_name: message.fullName
+            full_name: message.fullName,
+            is_read: message.isRead ? 1 : 0
         });
     }
 
