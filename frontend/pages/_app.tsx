@@ -48,7 +48,7 @@ const MyApp = ({ Component, pageProps, protection }: IMyApp) => {
           value={{
             revalidateOnMount: true,
             revalidateOnFocus: false,
-            dedupingInterval: 1000,
+            dedupingInterval: 5000,
             fetcher: (url) =>
               axios({
                 url: url,

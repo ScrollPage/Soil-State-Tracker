@@ -11,9 +11,15 @@ interface IChatListItem {
   userName: string;
   id: number;
   isNotify: boolean;
+  isRead?: boolean;
 }
 
-const ChatListItem: React.FC<IChatListItem> = ({ userName, id, isNotify }) => {
+const ChatListItem: React.FC<IChatListItem> = ({
+  isRead,
+  userName,
+  id,
+  isNotify,
+}) => {
   const dispatch = useDispatch();
 
   const { query } = useRouter();
@@ -40,7 +46,11 @@ const ChatListItem: React.FC<IChatListItem> = ({ userName, id, isNotify }) => {
       ) : (
         <Link href={`/support/?id=${id}`}>
           <a>
-            <h4>{userName}</h4>
+            <h4>
+              {userName}
+              &nbsp;
+              {isRead !== undefined && !isRead && "!"}
+            </h4>
           </a>
         </Link>
       )}

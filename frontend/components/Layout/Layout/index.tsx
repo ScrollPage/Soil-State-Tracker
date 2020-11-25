@@ -14,7 +14,11 @@ import { IProtection } from "@/types/protection";
 import Pusher from "pusher-js";
 import { getUser } from "@/utils.ts/getUser";
 import { INotify } from "@/types/chat";
-import { addNotifyChatMutate, removeNotifyChatMutate } from "@/mutates/chat";
+import {
+  addNotifyChatMutate,
+  notifyUnreadChatMutate,
+  removeNotifyChatMutate,
+} from "@/mutates/chat";
 import { show } from "@/store/actions/alert";
 
 interface ILayout {
@@ -40,16 +44,18 @@ const Layout: React.FC<ILayout> = ({ children, protection }) => {
     });
     const channel = pusher.subscribe(`notifications${userId}`);
     const notifyUrl = "/api/notifications/";
+    const chatUrl = "/api/chat/";
     channel.bind("new_chat", function (data: INotify) {
       addNotifyChatMutate(notifyUrl, data.chat, data.user_name);
       dispatch(show("Новый чат!", "success"));
-      console.log("new_chat");
     });
-    channel.bind("chat_accepted", function (data: any) {
-      console.log(data);
+    channel.bind("chat_accepted", function (data: { chat: number }) {
       removeNotifyChatMutate(notifyUrl, data.chat);
       dispatch(show("Новый чат принял другой менеджер!", "success"));
-      console.log("chat_accepted");
+    });
+    channel.bind("new_message", function (data: { chat: number }) {
+      notifyUnreadChatMutate(chatUrl, data.chat);
+      dispatch(show("У вас новое сообщение!", "success"));
     });
     return () => {
       pusher.disconnect();

@@ -37,7 +37,7 @@ const ChatWidgetInner: React.FC<IChatWidgetInner> = ({ setIsOpen }) => {
 
   const [isFirst, setIsFirst] = useState(false);
 
-  const { fullName } = getUser();
+  const { fullName, isStaff } = getUser();
 
   useEffect(() => {
     scrollToBottom();
@@ -78,6 +78,7 @@ const ChatWidgetInner: React.FC<IChatWidgetInner> = ({ setIsOpen }) => {
       chatId: chatId,
       content: message,
       fullName: fullName,
+      isStaff: isStaff,
     };
     WebSocketInstance.newChatMessage(messageObject);
     setMessage("");

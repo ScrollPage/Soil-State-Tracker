@@ -16,6 +16,8 @@ const ChatList: React.FC<IChatList> = ({ chats }) => {
     initialData: chats,
   });
 
+  console.log(data);
+
   if (error) return <ErrorMessage message="Ошибка загрузки чатов..." />;
 
   if (!data) return <LoadingSpinner />;
@@ -32,6 +34,7 @@ const ChatList: React.FC<IChatList> = ({ chats }) => {
             id={item.id}
             userName={item.user_name}
             isNotify={false}
+            isRead={item.is_read}
           />
         );
       })}

@@ -29,16 +29,12 @@ const Chat: React.FC<IChatProps> = ({ chats, notifications }) => {
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [chatId, setChatId] = useState<string | undefined>(undefined);
-  const { fullName } = getUser();
+  const { fullName, isStaff } = getUser();
   const { query } = useRouter();
 
   useEffect(() => {
     setChatId(getAsString(query.id));
   }, [query]);
-
-  const getChatNameById = (chats: IChat[], id: string) => {
-    return chats.find((chat: IChat) => chat.id === Number(id))?.user_name;
-  };
 
   useEffect(() => {
     if (chatId) {
@@ -61,6 +57,7 @@ const Chat: React.FC<IChatProps> = ({ chats, notifications }) => {
       chatId: chatId,
       content: message,
       fullName: fullName,
+      isRead: isStaff,
     };
     WebSocketInstance.newChatMessage(messageObject);
     setMessage("");
@@ -78,14 +75,14 @@ const Chat: React.FC<IChatProps> = ({ chats, notifications }) => {
       <SChatLeft>
         <SChatSearch>Поиск</SChatSearch>
         <SChatLeftInner>
-          <NotifyList notifications={notifications} />
+          {/* <NotifyList notifications={notifications} /> */}
           <ChatList chats={chats} />
         </SChatLeftInner>
       </SChatLeft>
       <SChatRight>
         {chatId && chats && (
           <>
-            <ChatInfo name={getChatNameById(chats, chatId)} />
+            <ChatInfo chatId={chatId} />
             <ChatInner />
             <ChatInput
               sendMessage={sendMessageHandler}
