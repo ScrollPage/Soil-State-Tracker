@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'djoser',
     'drf_yasg',
+    'model_utils',
     'rest_auth',
     'rest_framework',
     'rest_framework.authtoken',
@@ -99,6 +100,17 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'Soil-State-Tracker',
+#         'USER': 'postgres',
+#         'PASSWORD': 'pass',
+#         'HOST': '127.0.0.1',
+#         'PORT': 5432
+#     }
+# }
 
 
 # Password validation
@@ -234,12 +246,12 @@ CACHEOPS_REDIS = {
 }
 
 CACHEOPS_DEFAULTS = {
-    'timeout': 60*60
+    'timeout': 60*30
 }
 
 CACHEOPS = {
-    'company.company': {'ops': 'all'},
-    'detector.detector': {'ops': 'all'},
+    'company.company': {'ops': 'all', 'timeout': 60*120},
+    'detector.detector': {'ops': 'all', 'timeout': 60*120},
     'client.client': {'ops': 'all'},
     'chat.message': {'ops': 'all'},
     'chat.chat': {'ops': 'all'}

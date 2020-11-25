@@ -8,7 +8,7 @@ from cacheops import cached_as
 
 from company.models import Company
 from detector.models import Detector
-from .service import PermissionSerializerModelViewSet
+from .service import PermissionSerializerModelViewSet, get_detectors_out_of_company_qs
 from .serializers import (
     CompanySerializer, 
     CompanyUpdateSerializer,
@@ -40,13 +40,19 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     }
 
     def get_queryset(self):
-        queryset = Company.objects.filter(admin=self.request.user)
+        queryset = Company.objects.filter(admin=self.request.user) \
+            .prefetch_related(
+                Prefetch(
+                    'detectors',
+                    queryset=Detector.objects.all().only('user__id')
+                )
+            )
 
-        @cached_as(queryset)
+        @cached_as(queryset.join(get_detectors_out_of_company_qs(queryset)))
         def _annotate_company(queryset=queryset):
             return queryset \
-                .select_related('admin') \
-                .annotate(is_admin=Count('admin', filter=Q(admin=self.request.user)))
+                .annotate(overall_detectors=Count('detectors', distinct=True)) \
+                .annotate(free_detectors=Count('detectors', filter=Q(detectors__user__id=None), distinct=True))
 
         return _annotate_company()
 

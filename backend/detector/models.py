@@ -1,5 +1,7 @@
 from django.db import models
 
+from model_utils.managers import JoinManager
+
 from client.models import Client
 from company.models import Company
 
@@ -20,6 +22,8 @@ class Detector(models.Model):
         on_delete=models.SET_NULL, 
         related_name='my_detectors'
     )
+
+    objects = JoinManager()
 
     def __str__(self):
         return f'detector {self.id} that belongs to {self.company}'

@@ -5,12 +5,12 @@ from client.api.serializers import ClientDetailSerializer
 
 class CompanySerializer(serializers.ModelSerializer):
     '''Создание компании'''
-    admin = ClientDetailSerializer(read_only=True)
-    is_admin = serializers.BooleanField(read_only=True)
+    overall_detectors = serializers.IntegerField(read_only=True)
+    free_detectors = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Company
-        exclude = ['workers']
+        exclude = ['workers', 'admin']
 
 class CompanyUpdateSerializer(serializers.ModelSerializer):
     '''Обновление информации о компании'''

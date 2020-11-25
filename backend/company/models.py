@@ -1,6 +1,8 @@
 from rest_framework.exceptions import NotFound
 from django.db import models
 
+from model_utils.managers import JoinManager
+
 from client.models import Client
 
 class Company(models.Model):
@@ -10,6 +12,8 @@ class Company(models.Model):
     info = models.TextField('Информация', default='')
     admin = models.ForeignKey(Client, verbose_name='Администратор', on_delete=models.CASCADE)
     workers = models.ManyToManyField(Client, verbose_name='Работники', related_name='work')
+
+    objects = JoinManager()
 
     def __str__(self):
         return f'company {self.name}'
