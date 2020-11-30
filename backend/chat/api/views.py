@@ -30,6 +30,8 @@ class ChatViewSet(PermissionSerializerListCreateViewSet):
 
     def get_queryset(self):
         if self.action == 'accept_manager':
+            return Chat.objects.filter(manager=None)
+        elif self.action == 'read_messages':
             return Chat.objects.filter(manager=self.request.user)
         else:
             queryset = Chat.objects.filter(manager=self.request.user) \
