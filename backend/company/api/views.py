@@ -77,6 +77,9 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
                         )
                     )
                 )
+        for worker in _get_workers():
+            print(worker)
+            print(worker.my_detectors.all())
                 
         serializer = self.get_serializer(_get_workers(), many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -102,7 +105,8 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
         company = self.get_object()
         worker = company.get_worker(serializer.data['id'])
         detectors = company.no_user_detectors().filter(id__in=serializer.data['detectors'])
-        detectors.update(user=worker)
+        list(map(lambda detector: detector.set_user(worker), detectors))
+        # detectors.update(user=worker)
         return Response(status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['post'])
@@ -111,5 +115,6 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
         serializer.is_valid(raise_exception=True)
         company = self.get_object()
         detectors = company.detectors.filter(id__in=serializer.data['detectors'])
-        detectors.update(user=None)
+        list(map(lambda detector: detector.set_user(None), detectors))
+        # detectors.update(user=None)
         return Response(status=status.HTTP_200_OK)

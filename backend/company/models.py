@@ -14,6 +14,10 @@ class Company(models.Model):
     def __str__(self):
         return f'company {self.name}'
 
+    class Meta:
+        verbose_name = 'Компания'
+        verbose_name_plural = 'Компании'
+
     def get_worker(self, uid):
         try:
             worker = self.workers.get(id=uid)
@@ -23,7 +27,3 @@ class Company(models.Model):
     
     def no_user_detectors(self):
         return self.detectors.filter(user=None)
-
-    class Meta:
-        verbose_name = 'Компания'
-        verbose_name_plural = 'Компании'

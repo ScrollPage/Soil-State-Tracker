@@ -12,14 +12,11 @@ class PermissionSerializerModelViewSet(PermissionSerializerMixin, ModelViewSet):
     '''
     pass
 
-def join_qs(queryset, objects):
-    return queryset.join(objects)
+def concatenate_qs(queryset, objects):
+    queryset |= objects
+    return queryset
 
 def get_detectors_out_of_company_qs(queryset):
-    try:
-        detectors_queryset = queryset.first().detectors.all()
-    except AttributeError:
-        return Detector.objects.none()
-    else:
-        list(map(lambda company: join_qs(detectors_queryset, company.detectors.all()), queryset[1:]))
-        return detectors_queryset
+    detectors = Detector.objects.none()
+    list(map(lambda company: concatenate_qs(detectors, company.detectors.all()), queryset))
+    return detectors
