@@ -96,7 +96,7 @@ class TestViews(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     @override_settings(CACHEOPS_ENABLED=False)
-    def test_read_mesages_unauth(self):
+    def test_read_mesages_auth(self):
         response = get_response('accept-manager-read-messages', 'put', self.user1, kwargs={'pk': 1})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

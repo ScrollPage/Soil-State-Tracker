@@ -77,9 +77,6 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
                         )
                     )
                 )
-        for worker in _get_workers():
-            print(worker)
-            print(worker.my_detectors.all())
                 
         serializer = self.get_serializer(_get_workers(), many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)

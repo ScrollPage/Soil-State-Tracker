@@ -29,20 +29,21 @@ class ChatViewSet(PermissionSerializerListCreateViewSet):
     }
 
     def get_queryset(self):
-        if self.action == 'list' or self.action == 'retrieve':
+        if self.action == 'accept_manager':
+            return Chat.objects.filter(manager=self.request.user)
+        else:
             queryset = Chat.objects.filter(manager=self.request.user) \
                 .prefetch_related(
                     Prefetch(
                         'messages',
-                        queryset=Message.objects.all().only('is_read')
+                        queryset=Message.objects.only('is_read').all()
                     )
                 ) \
                 .annotate(is_read=Count('messages', filter=Q(messages__is_read=False)))
 
             return queryset
                 
-        elif self.action == 'accept_manager':
-            return Chat.objects.all()
+        
 
     def perform_create(self, serializer):
         serializer.save(user_name=str(self.request.user))
