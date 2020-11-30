@@ -41,7 +41,7 @@ class ChatViewSet(PermissionSerializerListCreateViewSet):
 
             return queryset
                 
-        elif self.action == 'accept_manager' or self.action == 'read_messages':
+        elif self.action == 'accept_manager':
             return Chat.objects.all()
 
     def perform_create(self, serializer):

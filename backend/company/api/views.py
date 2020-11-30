@@ -40,7 +40,7 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
     }
 
     def get_queryset(self):
-        queryset = Company.objects.filter(admin=self.request.user) \
+        companies = Company.objects.filter(admin=self.request.user) \
             .prefetch_related(
                 Prefetch(
                     'detectors',
@@ -48,24 +48,25 @@ class CompanyViewSet(PermissionSerializerModelViewSet):
                 )
             )
 
-        @cached_as(queryset.join(get_detectors_out_of_company_qs(queryset)))
-        def _annotate_company(queryset=queryset):
-            return queryset \
+        @cached_as(companies, get_detectors_out_of_company_qs(companies))
+        def _annotate_companies(companies=companies):
+            return companies \
                 .annotate(overall_detectors=Count('detectors', distinct=True)) \
                 .annotate(free_detectors=Count('detectors', filter=Q(detectors__user__id=None), distinct=True))
 
-        return _annotate_company()
+        return _annotate_companies()
 
     def perform_create(self, serializer):
         serializer.save(admin=self.request.user)
 
     @action(detail=False, methods=['get'])
     def workers(self, request, *args, **kwargs):
-        queryset = self.get_object().workers.all()
+        company = self.get_object()
+        workers = company.workers.all()
 
-        @cached_as(queryset)
-        def _get_workers(queryset=queryset):
-            return queryset \
+        @cached_as(company.detectors.all(), workers)
+        def _get_workers(workers=workers):
+            return workers \
                 .prefetch_related(
                     Prefetch(
                         'my_detectors',

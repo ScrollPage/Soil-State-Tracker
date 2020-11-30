@@ -20,5 +20,6 @@ def get_detectors_out_of_company_qs(queryset):
         detectors_queryset = queryset.first().detectors.all()
     except AttributeError:
         return Detector.objects.none()
-    list(map(lambda company: join_qs(detectors_queryset, company.detectors.all()), queryset[1:]))
-    return detectors_queryset
+    else:
+        list(map(lambda company: join_qs(detectors_queryset, company.detectors.all()), queryset[1:]))
+        return detectors_queryset
