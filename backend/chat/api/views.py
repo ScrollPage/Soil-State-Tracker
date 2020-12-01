@@ -44,8 +44,6 @@ class ChatViewSet(PermissionSerializerListCreateViewSet):
                 .annotate(is_read=Count('messages', filter=Q(messages__is_read=False)))
 
             return queryset
-                
-        
 
     def perform_create(self, serializer):
         serializer.save(user_name=str(self.request.user))
@@ -60,7 +58,7 @@ class ChatViewSet(PermissionSerializerListCreateViewSet):
     @action(detail=False, methods=['put'])
     def read_messages(self, request, *args, **kwargs):
         chat = self.get_object()
-        chat.messages.all().update(is_read=True)
+        chat.messages.filter(is_read=False).update(is_read=True)
         return Response(status=status.HTTP_200_OK)
 
 class ChatNotificationsListView(generics.ListAPIView):

@@ -28,10 +28,6 @@ class Detector(models.Model):
         verbose_name = 'Датчик'
         verbose_name_plural = 'Датчики'
 
-    def set_user(self, user):
-        self.user=user
-        self.save()
-
 class DetectorData(models.Model):
     detector = models.ForeignKey(
         Detector, 
